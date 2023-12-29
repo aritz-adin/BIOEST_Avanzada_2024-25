@@ -1,0 +1,15 @@
+---
+title: "Chapter 2: Generalized Linear Mixed Models"
+author: "Aritz Adin y Jaione Etxeberria"
+date: "02-01-2024"
+date-format: "MMM/YYYY"
+format:
+  html:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)  
+```
+
+# Exercise 1

@@ -1,0 +1,511 @@
+---
+title: "Chapter 1: Linear Mixed Models"
+author: "Aritz Adin y Jaione Etxeberria"
+date: "02-01-2024"
+date-format: "MMM/YYYY"
+format:
+  html:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)  
+```
+
+# Exercise 1: plasma data
+
+Below are the results of a randomised complete block experiment to compare the effects on the clotting time of plasma (mins) of four different methods for the treatment of plasma. Samples of plasma were taken from a random sample of 8 volunteers and were subjected to all 4 treatments.
+
+|               | **Treatment** |       |       |       |
+|:-------------:|:-------------:|:-----:|:-----:|:-----:|
+| **Volunteer** |     **1**     | **2** | **3** | **4** |
+|     **1**     |      8.4      |  9.4  |  9.8  | 12.2  |
+|     **2**     |     12.8      | 15.2  | 12.9  | 14.4  |
+|     **3**     |      9.6      |  9.1  | 11.2  |  9.8  |
+|     **4**     |      9.8      |  8.8  |  9.9  | 12.0  |
+|     **5**     |      8.4      |  8.2  |  8.5  |  8.5  |
+|     **6**     |      8.6      |  9.9  |  9.8  | 10.9  |
+|     **7**     |      8.9      |  9.0  |  9.2  | 10.4  |
+|     **8**     |      7.9      |  8.1  |  8.2  | 10.0  |
+
+
+### 1. Load the data intored in the `Plasma.txt` file, convert `Volunteer` and `Treatment` variables to factor, and make a descriptive plot to visualize differences between treatments and/or subjects.
+
+
+```{r}
+Plasma <- read.table("Plasma.txt", header=TRUE)
+head(Plasma, n=8)
+
+Plasma$Volunteer <- as.factor(Plasma$Volunteer)
+Plasma$Treatment <- as.factor(Plasma$Treatment)
+str(Plasma)
+```
+We can make a descriptive plot of the data using the ggplot2 package
+```{r}
+library(ggplot2)
+
+ggplot(Plasma, aes(x=Clotting, y=Volunteer, color=Treatment)) +
+  geom_point() +
+  labs(x="Clotting time (mins)", y="Volunteer") +
+  theme_minimal()
+```
+We observe systematic differences between subjects and treatments.
+
+
+### 2. Which variable should be included as a fixed effect, and which as a random effect? Make a *design plot* to visually compare the magnitude of the effects of the `Treatment` and `Volunteer` factors. 
+
+- We want to compare these particular types of treatments (*experimental factor*), so we use fixed effects for the `Type` factor.
+
+- The eight subjects represents a sample from the population about which we wish to make inferences (*random factor*), so we use random effects to model the `Volunteer` factor. 
+
+```{r, fig.cap="Average clotting time for each level of the factors `Treatment` and `Volunteer`"}
+plot.design(Clotting ~ Treatment*Volunteer, data=Plasma)
+```
+
+- We see that the variability associated with the `Treatment` factor is lower than the variability associated with the `Volunteer` factor.
+
+- We also see that the average clotting time according to the treatment type is in the order $T1 \leq T2 \leq T3 \leq T4$.
+
+
+### 3. Write the linear mixed model equation.
+
+$$y_{ij} = \beta_j + u_i + \epsilon_{ij}, \quad i=1,\ldots,8, \quad j=1,\ldots,4,$$
+$$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$
+where
+
+* $\beta_j$ is the mean clotting time from the $j$-th treatment
+* $u_i$ is a random variable associated with the $i$-th treatment
+* $\epsilon_{ij}$ are independent random errors
+
+Using matrix notation
+
+$$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_4 \end{pmatrix} \begin{pmatrix} \beta_1 \\ \vdots \\ \beta_4 \end{pmatrix} +
+\begin{pmatrix}
+\boldsymbol{1}_4 & \boldsymbol{0} & \ldots & \boldsymbol{0} \\
+\boldsymbol{0} & \boldsymbol{1}_4 & \ldots & \boldsymbol{0} \\
+\vdots & \vdots & \ddots & \vdots \\
+\boldsymbol{0} & \boldsymbol{0} & \cdots & \boldsymbol{1}_4 \\
+\end{pmatrix} \boldsymbol{u} + \boldsymbol{\epsilon}$$
+
+or using Kronecker products
+
+$$y = (\boldsymbol{1}_8 \otimes \boldsymbol{I}_4)\boldsymbol{\beta} + (\boldsymbol{I}_8 \otimes \boldsymbol{1}_4)\boldsymbol{u} + \boldsymbol{\epsilon}$$
+
+### 4. Choose the correct structure for the random effects
+
+```{r, message=FALSE}
+## Fit the models ##
+library(lme4)
+
+plasma.null <- lm(Clotting ~ -1 + Treatment, data=Plasma)
+plasma.lmer <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma)
+
+## LRT for the variance component sigma2_u ##
+LRT <- -2*(logLik(plasma.null,REML=T)-logLik(plasma.lmer,REML=T))
+mean(pchisq(LRT,df=c(0,1),lower.tail=F))
+
+## Using the ranova() function from lmerTest package ##
+library(lmerTest)
+ranova(plasma.lmer)
+ranova(plasma.lmer)[2,6]/2
+
+## We can also use the AIC/BIC to compare the models ##
+Models <- list(plasma.null=plasma.null, plasma.lmer=plasma.lmer)
+cbind(AIC=lapply(Models, AIC), BIC=lapply(Models, BIC))
+```
+
+### 5. Check if the treatment effect is significant.
+
+We compare nested models (with and without `Treatment` factor) using the LRT wi the `anova()` function base on fitting through the ML method
+
+```{r}
+M1 <- lmer(Clotting ~ 1 + (1|Volunteer), data=Plasma, REML=FALSE)
+M2 <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma, REML=FALSE)
+anova(M1,M2)
+```
+We conclude that the `Treatment` effect is significant.
+
+### 6. Verify whether the model assumptions are satisfied.
+
+**a) Assessing assumptions on the within-group errors**
+```{r}
+plot(plasma.lmer)
+plot(plasma.lmer, Volunteer ~ resid(., type="pearson"), abline=0, lty=2)
+
+res <- resid(plasma.lmer, type="pearson")
+qqnorm(res)
+qqline(res)
+
+shapiro.test(res)
+```
+* We observe that the residuals are centered at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy). 
+
+**b) Assessing assumptions on the random-effects**
+```{r}
+u <- unlist(ranef(plasma.lmer)$Volunteer)
+qqnorm(u)
+qqline(u)
+
+shapiro.test(u)
+```
+
+* Again, the are some issues with the assumptions for the random effects.
+
+
+### 7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.
+
+**a) Estimated fixed effects and 95% confidence intervals**
+```{r}
+fixef(plasma.lmer)
+vcov(plasma.lmer)
+
+beta.CI <- confint(plasma.lmer, parm="beta_")
+beta.CI
+
+j <- 4
+plot(1:j, fixef(plasma.lmer), pch=19, cex=0.5, xaxt="n",
+     xlim=0.5+c(0,j), ylim=range(c(beta.CI))*c(0.9,1.1),
+     xlab="Type", ylab="Estimated fixed effects")
+axis(1, at=1:j, labels=rownames(beta.CI))
+segments(1:j, beta.CI[,"2.5 %"], 1:j, beta.CI[,"97.5 %"])
+```
+We can use the `emmeans()` function to compute pairwise comparisons between treatments
+```{r}
+library(emmeans)
+emmeans(plasma.lmer, pairwise~Treatment, infer=T)
+```
+Two out of six pairwise comparisons are statistically significant at the 5% level:
+
+* The mean clotting time for treatment 4 is significantly longer than that for treatments 1 and 2.
+
+**b) Estimated variance components and 95% confidence intervals**
+```{r}
+VarCorr(plasma.lmer)
+confint(plasma.lmer, parm="theta_")
+```
+Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{1.63^2}{1.63^2+0.81^2}=0.802$. Which means that 80.1% of the overall variability can be attributed to the differences between the individuals.
+
+**c) Compute the predicted random effects and fitted values**
+```{r}
+t(ranef(plasma.lmer)$Volunteer)
+
+plasma.fitted <- cbind(Plasma,
+                       Clotting.fit=fitted(plasma.lmer),
+                       error=resid(plasma.lmer))
+plasma.fitted
+```
+
+# Exercise 2: spider data
+
+[Oxbrough et al. (2005)](https://www.sciencedirect.com/science/article/pii/S0378112705002021) investigated how spider communities change over forestation cycles in conifer and broadleaf plantations. They identified environmental and structural features of the habitat than can be used as indicators of spider biodiversity. Different plots were surveyed, each comprising 5 to 7 sampling sites separated by a minimum of 50 metres. More than 100 species of spiders were observed. 
+
+The `Spiders.txt` file contains some of the data recorded from the original study. We are interested in analyzing the relationship between the spider diversity in each site with some environmental explanatory variables. The data set contains the following variables:
+
+* `DivIndex`: Variable of interest. Lower values of this index indicates less abundance of different species.
+* `HerbLayer`: Percentage of Herb Layer Cover
+* `Litter`: Percentage of Litter Content
+* `GroundVeg`: Percentage of Ground Vegetation
+* `Plot`: Factor indicating the surveyed plot.
+
+### 1. Load the data intored in the `Spiders.txt` file and convert `Plot` variable to factor. Make descriptive graphs to visualize relationships between the variable of interest and the explanatory variables, taking into account the `Plot` factor.
+
+```{r}
+Spiders <- read.table("Spiders.txt", header=T)
+Spiders$Plot <- as.factor(Spiders$Plot)
+str(Spiders)
+```
+
+We can make descriptive graphs of the data using the ggplot2 package
+```{r}
+library(ggplot2)
+
+ggplot(Spiders, aes(x=HerbLayer, y=DivIndex, color=Plot)) +
+  geom_point() +
+  labs(x="Percentage of Herb Layer Cover", y="Diversity Index") +
+  theme_minimal()
+
+ggplot(Spiders, aes(x=Litter, y=DivIndex, color=Plot)) +
+  geom_point() +
+  labs(x="Percentage of Litter Content", y="Diversity Index") +
+  theme_minimal()
+
+ggplot(Spiders, aes(x=GroundVeg, y=DivIndex, color=Plot)) +
+  geom_point() +
+  labs(x="Percentage of Ground Vegetation", y="Diversity Index") +
+  theme_minimal()
+```
+
+Design graph to compare average diversity indexes for each level of the `Plot` factor
+```{r}
+plot.design(DivIndex ~ Plot, data=Spiders)
+```
+
+### 2. Choose the correct structure for the random effects
+
+```{r, message=FALSE}
+## Fit the models ##
+library(lme4)
+
+spiders.null <- lm(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg, data=Spiders)
+spiders.lmer <- lmer(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg + (1|Plot), data=Spiders)
+
+## LRT for the variance component sigma2_u ##
+LRT <- -2*(logLik(spiders.null,REML=T)-logLik(spiders.lmer,REML=T))
+mean(pchisq(LRT,df=c(0,1),lower.tail=F))
+
+## Using the ranova() function from lmerTest package ##
+library(lmerTest)
+ranova(spiders.lmer)
+ranova(spiders.lmer)[2,6]/2
+```
+
+### 3. Check which environmental variables should be included in the model.
+
+We compare nested models:
+```{r}
+M0 <- lmer(DivIndex ~ 1 + (1|Plot), data=Spiders, REML=FALSE)
+M1 <- lmer(DivIndex ~ 1 + HerbLayer + (1|Plot), data=Spiders, REML=FALSE)
+M2 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + (1|Plot), data=Spiders, REML=FALSE)
+M3 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg + (1|Plot), data=Spiders, REML=FALSE)
+anova(M0,M1,M2,M3)
+```
+
+We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant.
+
+We can also check if a interaction between these two variables should be included in the model
+```{r}
+M4 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + HerbLayer*Litter + (1|Plot), data=Spiders, REML=FALSE)
+anova(M2,M4)
+```
+
+
+### 4. Fit the final linear mixed model and write its equation
+
+We fit the following linear mixed model
+$$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$
+$$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$
+where
+
+* $y_{ij}$ is the diversity index at site $j$ in plot $i$
+* $\beta_0$ is a global intercept
+* $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively
+* $u_i$ is a random variable associated with the $i$-th surveyed plot
+* $\epsilon_{ij}$ are independent random errors
+
+```{r}
+## Final model ##
+library(lme4)
+
+Model <- lmer(DivIndex ~ 1 + HerbLayer + Litter + (1|Plot), data=Spiders)
+summary(Model)
+```
+
+### 5. Verify whether the model assumptions are satisfied.
+
+**a) Assessing assumptions on the within-group errors**
+```{r}
+plot(Model)
+plot(Model, Plot ~ resid(., type="pearson"), abline=0, lty=2)
+
+res <- resid(Model, type="pearson")
+qqnorm(res)
+qqline(res)
+
+shapiro.test(res)
+```
+
+**b) Assessing assumptions on the random-effects**
+```{r}
+u <- unlist(ranef(Model)$Plot)
+qqnorm(u)
+qqline(u)
+
+shapiro.test(u)
+```
+
+### 6. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Make a plot of observed vs predicted diversity index values.
+
+**a) Estimated fixed effects and 95% confidence intervals**
+```{r}
+fixef(Model)
+
+beta.CI <- confint(Model, parm="beta_")
+beta.CI
+```
+
+**b) Estimated variance components and 95% confidence intervals**
+```{r}
+VarCorr(Model)
+confint(Model, parm="theta_")
+```
+
+Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.802$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots.
+
+**c) Compare observed and predicted diversity index values**
+```{r}
+spiders.fitted <- cbind(Spiders,
+                        DivIndex.fit=fitted(Model),
+                        error=resid(Model))
+head(spiders.fitted)
+
+plot(spiders.fitted$DivIndex, spiders.fitted$DivIndex.fit,
+     xlab="Observed", ylab="Predicted", main="Diversity Index",
+     xlim=c(0.4,1.5), ylim=c(0.4,1.5))
+lines(c(0,2),c(0,2))
+```
+
+# Exercise 3: split-plot experiment on varieties of oats
+
+These data have been introduced by [Yates (1935)](https://www.jstor.org/stable/2983638) as an example of a split-plot design. The experimental units were arranged into six block using a $3 \times 4$ full factorial design, with three varieties of oats and four nitrogen concentrations. The term *full factorial* means that every variety was used with every nitrogen concentration.
+
+```{r}
+Oats <- read.table("Oats.txt", header=T, stringsAsFactors = T)
+head(Oats, n=12)
+str(Oats)
+
+library(ggplot2)
+
+ggplot(Oats, aes(x=factor(nitro), y=yield, color=Variety)) +
+  geom_line(aes(group=Variety)) + 
+  geom_point() + 
+  labs(x="Nitrogen concentration", y="Yield") +
+  ggtitle("Yield of oats by variety and nitrogen level") +
+  facet_wrap(~ Block, ncol=2) +
+  theme_minimal()
+```
+
+Design graph to compare average yields for each level of `Block`, `Variety` and `nitro` factors
+
+```{r}
+plot.design(yield ~ Block*Variety*factor(nitro), data=Oats)
+```
+
+### 1. Choose the correct structure for the random effects
+
+We fit linear mixed models with all the fixed effects and different nested structures of random effects
+```{r}
+library(lme4)
+
+M0 <- lm(yield ~ 1 + Variety*factor(nitro), data=Oats)
+M1 <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block), data=Oats)
+M2 <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block) + (1|Block:Variety), data=Oats)
+```
+
+LRT for the variance component of the `Block` random effect
+```{r}
+test01 <- -2*(logLik(M0,REML=T)-logLik(M1,REML=T))
+mean(pchisq(test01,df=c(0,1),lower.tail=F))
+```
+
+LRT for the variance component of the `Block:Variety` interaction random effect
+```{r}
+test12 <- -2*(logLik(M1,REML=T)-logLik(M2,REML=T))
+mean(pchisq(test12,df=c(0,1),lower.tail=F))
+```
+
+### 2. Choose the correct structure for the fixed effects
+Again, we compare nested models with different structures of fixed effects
+```{r}
+M2a <- lmer(yield ~ 1 + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
+M2b <- lmer(yield ~ 1 + Variety + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
+M2c <- lmer(yield ~ 1 + Variety + factor(nitro) + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
+M2d <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
+anova(M2a,M2b,M2c,M2d)
+```
+
+We conclude that only the nitrogen level should be included as a significant fixed effect. 
+
+### 3. Fit the final linear mixed model and write its equation
+
+We fit the following linear mixed model
+$$y_{ijk} = \beta_k + u_i + v_{ij} + \epsilon_{ijk}$$
+$$u_i \sim N(0,\sigma^2_u), \quad v_{ij} \sim N(0,\sigma^2_v), \quad \epsilon_{ijk} \sim N(0,\sigma^2)$$
+where
+
+* $y_{ijk}$ is the yield in block $i$ for oat variety $j$ and nitrogen concentration level $k$
+* $\beta_k$ is the mean yield for nitrogen concentration level $k$
+* $u_i$ is a random variable associated with the $i$-th block
+* $v_{ij}$ is a interaction random variable associated with variety $j$ within the $i$-th block
+* $\epsilon_{ijk}$ are independent random errors
+
+```{r}
+## Final model ##
+library(lme4)
+
+Model <- lmer(yield ~ -1 + factor(nitro) + (1|Block) + (1|Block:Variety), data=Oats)
+summary(Model)
+```
+
+### 4. Verify whether the model assumptions are satisfied.
+
+**a) Assessing assumptions on the within-group errors**
+```{r}
+plot(Model)
+plot(Model, Block ~ resid(., type="pearson"), abline=0, lty=2)
+plot(Model, Block:Variety ~ resid(., type="pearson"), abline=0, lty=2)
+
+res <- resid(Model, type="pearson")
+qqnorm(res)
+qqline(res)
+
+shapiro.test(res)
+```
+
+**b) Assessing assumptions on the random-effects**
+```{r}
+u <- t(ranef(Model)$Block)
+qqnorm(u)
+qqline(u)
+shapiro.test(u)
+
+v <- t(ranef(Model)$`Block:Variety`)
+qqnorm(v)
+qqline(v)
+shapiro.test(v)
+```
+
+### 5. Examine the model results.
+
+**a) Estimated fixed effects and 95% confidence intervals**
+```{r}
+fixef(Model)
+
+beta.CI <- confint(Model, parm="beta_")
+beta.CI
+
+j <- 4
+plot(1:j, fixef(Model), pch=19, cex=0.5, xaxt="n",
+     xlim=0.5+c(0,j), ylim=range(c(beta.CI))*c(0.9,1.1),
+     xlab="Nitro", ylab="Estimated fixed effects")
+axis(1, at=1:j, labels=c("0","0.2","0.4","0.6"))
+segments(1:j, beta.CI[,"2.5 %"], 1:j, beta.CI[,"97.5 %"])
+
+library(emmeans)
+emmeans(Model, pairwise~factor(nitro), infer=T)
+```
+
+**b) Estimated variance components and 95% confidence intervals**
+```{r}
+VarCorr(Model)
+confint(Model, parm="theta_")
+
+cor1 <- 14.506^2/(11.039^2+14.506^2+12.75^2)
+cor1
+
+cor2 <- 11.039^2/(11.039^2+14.506^2+12.75^2)
+cor2
+```
+* $\frac{\sigma^2_u}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.425$, which mean that 42.5% of the overall variability can be attributed to the main block effect.
+
+* $\frac{\sigma^2_v}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.246$, which mean that 24.6% of the overall variability can be attributed to the interaction effect.
+
+**c) Predicted random effects and yield values**
+```{r}
+t(ranef(Model)$Block)
+t(ranef(Model)$`Block:Variety`)
+
+Oats.fitted <- data.frame(Oats,
+                          yield.fit=fitted(Model),
+                          yield.error=resid(Model))
+head(Oats.fitted)
+```
