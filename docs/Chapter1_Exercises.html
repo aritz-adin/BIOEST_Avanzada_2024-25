@@ -416,7 +416,7 @@ plasma.lmer 107.8852 116.6796</code></pre>
 </section>
 <section id="check-if-the-treatment-effect-is-significant." class="level3">
 <h3 class="anchored" data-anchor-id="check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</h3>
-<p>We compare nested models (with and without <code>Treatment</code> factor) using the LRT wi the <code>anova()</code> function base on fitting through the ML method</p>
+<p>We compare nested models (with and without <code>Treatment</code> factor) using the LRT with the <code>anova()</code> function base on fitting through the ML method</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
@@ -842,7 +842,7 @@ data:  res
 W = 0.96873, p-value = 0.0007681</code></pre>
 </div>
 </div>
-<p><strong>b) Assessing assumptions on the random-effects</strong></p>
+<p><strong>b) Assessing assumptions on the random effects</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">ranef</span>(Model)<span class="sc">$</span>Plot)</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(u)</span>

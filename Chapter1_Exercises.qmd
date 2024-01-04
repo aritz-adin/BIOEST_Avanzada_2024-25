@@ -116,7 +116,7 @@ cbind(AIC=lapply(Models, AIC), BIC=lapply(Models, BIC))
 
 ### 5. Check if the treatment effect is significant.
 
-We compare nested models (with and without `Treatment` factor) using the LRT wi the `anova()` function base on fitting through the ML method
+We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method
 
 ```{r}
 M1 <- lmer(Clotting ~ 1 + (1|Volunteer), data=Plasma, REML=FALSE)
@@ -314,7 +314,7 @@ qqline(res)
 shapiro.test(res)
 ```
 
-**b) Assessing assumptions on the random-effects**
+**b) Assessing assumptions on the random effects**
 ```{r}
 u <- unlist(ranef(Model)$Plot)
 qqnorm(u)

@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -61,6 +95,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -110,7 +146,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link active" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link active" data-scroll-target="#exercise-1">Exercise 1</a>
+  <ul class="collapse">
+  <li><a href="#load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers." id="toc-load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers." class="nav-link" data-scroll-target="#load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers.">1. Load the data intored in the <code>multicentre.txt</code> file, convert <code>centre</code> variables to factor, and make a descriptive plot to visualize differences between treatments and/or centers.</a></li>
+  <li><a href="#which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors." id="toc-which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors." class="nav-link" data-scroll-target="#which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors.">2. Which variable should be included as a fixed effect, and which as a random effect? Make a <em>design plot</em> to visually compare the magnitude of the effects of the <code>centre</code> and <code>treat</code> factors.</a></li>
+  <li><a href="#write-the-mixed-logistic-regression-model-equation." id="toc-write-the-mixed-logistic-regression-model-equation." class="nav-link" data-scroll-target="#write-the-mixed-logistic-regression-model-equation.">3. Write the mixed logistic regression model equation.</a></li>
+  <li><a href="#choose-the-correct-structure-for-the-random-effects" id="toc-choose-the-correct-structure-for-the-random-effects" class="nav-link" data-scroll-target="#choose-the-correct-structure-for-the-random-effects">4. Choose the correct structure for the random effects</a></li>
+  <li><a href="#check-if-the-treatment-effect-is-significant." id="toc-check-if-the-treatment-effect-is-significant." class="nav-link" data-scroll-target="#check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</a></li>
+  <li><a href="#using-the-model-with-fixed-and-random-effects-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.-which-is-the-median-probability-of-a-positive-response-on-the-control-group" id="toc-using-the-model-with-fixed-and-random-effects-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.-which-is-the-median-probability-of-a-positive-response-on-the-control-group" class="nav-link" data-scroll-target="#using-the-model-with-fixed-and-random-effects-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.-which-is-the-median-probability-of-a-positive-response-on-the-control-group">6. Using the model with fixed and random effects, interpret the odds ratio <span class="math inline">\(e^{\beta_1}\)</span> and compute a 95% confidence interval. Which is the median probability of a positive response on the control group?</a></li>
+  <li><a href="#using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." id="toc-using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." class="nav-link" data-scroll-target="#using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied.">7. Using the best model, verify whether the model assumptions on the random effects are satisfied.</a></li>
+  <li><a href="#which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." id="toc-which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." class="nav-link" data-scroll-target="#which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient.">8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.</a></li>
+  <li><a href="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." id="toc-compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." class="nav-link" data-scroll-target="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -148,8 +195,275 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="exercise-1" class="level1">
 <h1>Exercise 1</h1>
+<p>Data from a clinical trial, involving 2 treatments (control and active drug), conducted at 8 randomly selected centers are discussed by <a href="https://www.jstor.org/stable/2530970">Beitler and Landis (1985)</a>. For the <span class="math inline">\(i\)</span>-th center and <span class="math inline">\(j\)</span>-th treatment, the proportion of <span class="math inline">\(n_{ij}\)</span> patients having a positive response (<span class="math inline">\(y_{ij}\)</span>) is recorded below.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>Centre</strong></th>
+<th style="text-align: center;"><strong>Treatment</strong></th>
+<th style="text-align: center;"><span class="math inline">\(y_{ij}\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(n_{ij}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">drug</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">36</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">control</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">drug</td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">control</td>
+<td style="text-align: center;">22</td>
+<td style="text-align: center;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">drug</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">control</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\ldots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\ldots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\ldots\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\ldots\)</span></td>
+</tr>
+</tbody>
+</table>
+<section id="load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers." class="level3">
+<h3 class="anchored" data-anchor-id="load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers.">1. Load the data intored in the <code>multicentre.txt</code> file, convert <code>centre</code> variables to factor, and make a descriptive plot to visualize differences between treatments and/or centers.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>multicentre <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file=</span><span class="st">"multicentre.txt"</span>, <span class="at">header=</span>T, <span class="at">stringsAsFactors=</span>T)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(multicentre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  centre   treat  y  n       obs
+1      1    drug 11 36 0.3055556
+2      1 control 10 37 0.2702703
+3      2    drug 16 20 0.8000000
+4      2 control 22 32 0.6875000
+5      3    drug 14 19 0.7368421
+6      3 control  7 19 0.3684211</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>multicentre<span class="sc">$</span>centre <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(multicentre<span class="sc">$</span>centre)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(multicentre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   22 obs. of  5 variables:
+ $ centre: Factor w/ 11 levels "1","2","3","4",..: 1 1 2 2 3 3 4 4 5 5 ...
+ $ treat : Factor w/ 2 levels "control","drug": 2 1 2 1 2 1 2 1 2 1 ...
+ $ y     : int  11 10 16 22 14 7 2 1 6 0 ...
+ $ n     : int  36 37 20 32 19 19 16 17 17 12 ...
+ $ obs   : num  0.306 0.27 0.8 0.688 0.737 ...</code></pre>
+</div>
+</div>
+<p>We can make a descriptive plot of the data using the ggplot2 package</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(multicentre, <span class="fu">aes</span>(<span class="at">x=</span>obs, <span class="at">y=</span>centre, <span class="at">color=</span>treat)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Observed probability"</span>, <span class="at">y=</span><span class="st">"Centre"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We observe systematic differences between centres.</p>
+</section>
+<section id="which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors." class="level3">
+<h3 class="anchored" data-anchor-id="which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors.">2. Which variable should be included as a fixed effect, and which as a random effect? Make a <em>design plot</em> to visually compare the magnitude of the effects of the <code>centre</code> and <code>treat</code> factors.</h3>
+<ul>
+<li><p>We want to compare these particular treatments (<em>experimental factor</em>), so we use fixed effects for the <code>treat</code> factor.</p></li>
+<li><p>The eight centres represents a random sample from the population about which we wish to make inferences (<em>random factor</em>), so we use random effects to model the <code>center</code> factor.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(obs <span class="sc">~</span> centre<span class="sc">*</span>treat, <span class="at">data=</span>multicentre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Average observed probabilities for each level of the factors <code>treat</code> and <code>center</code></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>We see that the variability associated with the treatment is much lower than the variability associated with the centres.</p></li>
+<li><p>We also see that the average probability of a positive response is lower in the <em>active drug</em> treatment.</p></li>
+</ul>
+</section>
+<section id="write-the-mixed-logistic-regression-model-equation." class="level3">
+<h3 class="anchored" data-anchor-id="write-the-mixed-logistic-regression-model-equation.">3. Write the mixed logistic regression model equation.</h3>
+<p><span class="math display">\[y_{ij} | u_i  \sim Bin(n_{ij},\pi_{ij}), \quad i=1,\ldots,10 \quad \mbox{and} \quad j=1,2\]</span> <span class="math display">\[\mbox{logit}(\pi_{ij}) = \beta_0 + \beta_1*x_{j} + u_i, \quad u_i \sim N(0,\sigma_u^2)\]</span> where</p>
+<ul>
+<li><span class="math inline">\(\pi_{ij}\)</span> is the probability of a favourable outcome in a patient on the <span class="math inline">\(i\)</span>-th centre and <span class="math inline">\(j\)</span>-th treatment</li>
+<li><span class="math inline">\(x_j\)</span> is an indicator variable for treatment (0=control, 1=active drug)</li>
+<li><span class="math inline">\(u_i\)</span> is a random variable associated with the <span class="math inline">\(i\)</span>-th centre</li>
+</ul>
+</section>
+<section id="choose-the-correct-structure-for-the-random-effects" class="level3">
+<h3 class="anchored" data-anchor-id="choose-the-correct-structure-for-the-random-effects">4. Choose the correct structure for the random effects</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the models ##</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>M0 <span class="ot">&lt;-</span> <span class="fu">glm</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treat, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">glmer</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treat <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>centre), <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## LRT for the variance component sigma2_u ##</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>LRT <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLik</span>(M0)<span class="sc">-</span><span class="fu">logLik</span>(M1))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">pchisq</span>(LRT,<span class="at">df=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),<span class="at">lower.tail=</span>F))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.910022e-15</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## We can also use the AIC/BIC to compare the models ##</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Models <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">multicentre.glm=</span>M0, <span class="at">multicentre.glmer=</span>M1)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">AIC=</span><span class="fu">lapply</span>(Models, AIC), <span class="at">BIC=</span><span class="fu">lapply</span>(Models, BIC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  AIC      BIC     
+multicentre.glm   196.8286 199.0107
+multicentre.glmer 138.4485 141.7216</code></pre>
+</div>
+</div>
+</section>
+<section id="check-if-the-treatment-effect-is-significant." class="level3">
+<h3 class="anchored" data-anchor-id="check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</h3>
+<p>We compare nested models (with and without <code>treat</code> factor) using the LRT with the <code>anova()</code> function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>M1a <span class="ot">&lt;-</span> <span class="fu">glmer</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>centre), <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>M1b <span class="ot">&lt;-</span> <span class="fu">glmer</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treat <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>centre), <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M1a,M1b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: multicentre
+Models:
+M1a: obs ~ 1 + (1 | centre)
+M1b: obs ~ 1 + treat + (1 | centre)
+    npar    AIC    BIC  logLik deviance  Chisq Df Pr(&gt;Chisq)
+M1a    2 136.63 138.82 -66.317   132.63                     
+M1b    3 138.45 141.72 -66.224   132.45 0.1862  1     0.6661</code></pre>
+</div>
+</div>
+<p><strong>We conclude that the treatment effect is not statistically significant.</strong></p>
+</section>
+<section id="using-the-model-with-fixed-and-random-effects-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.-which-is-the-median-probability-of-a-positive-response-on-the-control-group" class="level3">
+<h3 class="anchored" data-anchor-id="using-the-model-with-fixed-and-random-effects-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.-which-is-the-median-probability-of-a-positive-response-on-the-control-group">6. Using the model with fixed and random effects, interpret the odds ratio <span class="math inline">\(e^{\beta_1}\)</span> and compute a 95% confidence interval. Which is the median probability of a positive response on the control group?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(M1b, revpairwise<span class="sc">~</span>treat, <span class="at">type=</span><span class="st">"response"</span>, <span class="at">inf=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+ treat    prob     SE  df asymp.LCL asymp.UCL null z.ratio p.value
+ control 0.359 0.0892 Inf     0.208     0.545  0.5  -1.497  0.1345
+ drug    0.376 0.0911 Inf     0.220     0.564  0.5  -1.301  0.1932
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale 
+Tests are performed on the logit scale 
+
+$contrasts
+ contrast       odds.ratio    SE  df asymp.LCL asymp.UCL null z.ratio p.value
+ drug / control       1.08 0.186 Inf     0.768      1.51    1   0.433  0.6651
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the log odds ratio scale 
+Tests are performed on the log odds ratio scale </code></pre>
+</div>
+</div>
+<ul>
+<li><p>The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of <span class="math inline">\([0.77, 1.51]\)</span>.</p></li>
+<li><p>The median (for <span class="math inline">\(u_i=0\)</span>) probability of a positive response over a population of centres under the control group is <span class="math inline">\(\hat{\pi}_i=0.376\)</span> with a 95% confidence interval of <span class="math inline">\([0.220, 0.564]\)</span>.</p></li>
+</ul>
+</section>
+<section id="using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." class="level3">
+<h3 class="anchored" data-anchor-id="using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied.">7. Using the best model, verify whether the model assumptions on the random effects are satisfied.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> M1a</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>rand <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">ranef</span>(Model)<span class="sc">$</span>centre)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(rand)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(rand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(rand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  rand
+W = 0.93053, p-value = 0.4162</code></pre>
+</div>
+</div>
+<p>We don’t reject the null hypothesis of normality of the random effects.</p>
+</section>
+<section id="which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." class="level3">
+<h3 class="anchored" data-anchor-id="which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient.">8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VarCorr</span>(Model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Groups Name        Std.Dev.
+ centre (Intercept) 1.1692  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(Model, <span class="at">parm=</span><span class="st">"theta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Computing profile confidence intervals ...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          2.5 %   97.5 %
+.sig01 0.709846 2.060211</code></pre>
+</div>
+</div>
+<p>We can compute the intra-class correlation coefficient as <span class="math display">\[\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,\]</span> which means that 29% of the overall variability can be attributed to the differences between centres.</p>
+</section>
+<section id="compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." class="level3">
+<h3 class="anchored" data-anchor-id="compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>multicentre<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(Model, <span class="at">newdata=</span>multicentre, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(multicentre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  centre   treat  y  n       obs      pred
+1      1    drug 11 36 0.3055556 0.3337400
+2      1 control 10 37 0.2702703 0.3337400
+3      2    drug 16 20 0.8000000 0.5178894
+4      2 control 22 32 0.6875000 0.5178894
+5      3    drug 14 19 0.7368421 0.4391549
+6      3 control  7 19 0.3684211 0.4391549</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(multicentre, <span class="fu">aes</span>(<span class="at">x=</span>obs, <span class="at">y=</span>centre, <span class="at">color=</span>treat)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>pred, <span class="at">y=</span>centre), <span class="at">shape=</span><span class="dv">8</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Prob"</span>, <span class="at">y=</span><span class="st">"Centre"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Observed (dots) and predicted (asterisks) probabilities of a positive response for each centre</figcaption>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
