@@ -146,3 +146,10 @@ ggplot(multicentre, aes(x=obs, y=centre, color=treat)) +
   geom_point(aes(x=pred, y=centre), shape=8, color="black") + 
   labs(x="Prob", y="Centre")
 ```
+
+# Exercise 2
+
+See [https://stats.oarc.ucla.edu/r/dae/mixed-effects-logistic-regression/](https://stats.oarc.ucla.edu/r/dae/mixed-effects-logistic-regression/)
+
+* Several continuous and discrete covariates
+* Possibility to include 2 random effects
