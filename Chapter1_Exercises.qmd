@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Exercise 1: plasma data
 
-Below are the results of a randomised complete block experiment to compare the effects on the clotting time of plasma (mins) of four different methods for the treatment of plasma. Samples of plasma were taken from a random sample of 8 volunteers and were subjected to all 4 treatments.
+Below are the results of a randomised complete block experiment to compare the effects on the clotting time of plasma (mins) of four different methods for the treatment of plasma (*material extracted from Gallagher, 2023*). Samples of plasma were taken from a random sample of 8 volunteers and were subjected to all 4 treatments.
 
 |               | **Treatment** |       |       |       |
 |:-------------:|:-------------:|:-----:|:-----:|:-----:|
@@ -199,7 +199,7 @@ plasma.fitted
 
 [Oxbrough et al. (2005)](https://www.sciencedirect.com/science/article/pii/S0378112705002021) investigated how spider communities change over forestation cycles in conifer and broadleaf plantations. They identified environmental and structural features of the habitat than can be used as indicators of spider biodiversity. Different plots were surveyed, each comprising 5 to 7 sampling sites separated by a minimum of 50 metres. More than 100 species of spiders were observed. 
 
-The `Spiders.txt` file contains some of the data recorded from the original study. We are interested in analyzing the relationship between the spider diversity in each site with some environmental explanatory variables. The data set contains the following variables:
+The `Spiders.txt` file contains some of the data recorded from the original study (*material extracted from Zuur et al., 2013*). We are interested in analyzing the relationship between the spider diversity in each site with some environmental explanatory variables. The data set contains the following variables:
 
 * `DivIndex`: Variable of interest. Lower values of this index indicates less abundance of different species.
 * `HerbLayer`: Percentage of Herb Layer Cover
@@ -356,7 +356,7 @@ lines(c(0,2),c(0,2))
 
 # Exercise 3: split-plot experiment on varieties of oats
 
-These data have been introduced by [Yates (1935)](https://www.jstor.org/stable/2983638) as an example of a split-plot design. The experimental units were arranged into six block using a $3 \times 4$ full factorial design, with three varieties of oats and four nitrogen concentrations. The term *full factorial* means that every variety was used with every nitrogen concentration.
+These data have been introduced by [Yates (1935)](https://www.jstor.org/stable/2983638) as an example of a split-plot design (*material extracted from Durban, 2014*). The experimental units were arranged into six block using a $3 \times 4$ full factorial design, with three varieties of oats and four nitrogen concentrations. The term *full factorial* means that every variety was used with every nitrogen concentration.
 
 ```{r}
 Oats <- read.table("Oats.txt", header=T, stringsAsFactors = T)

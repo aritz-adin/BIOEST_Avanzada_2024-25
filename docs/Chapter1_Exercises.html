@@ -210,7 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="exercise-1-plasma-data" class="level1">
 <h1>Exercise 1: plasma data</h1>
-<p>Below are the results of a randomised complete block experiment to compare the effects on the clotting time of plasma (mins) of four different methods for the treatment of plasma. Samples of plasma were taken from a random sample of 8 volunteers and were subjected to all 4 treatments.</p>
+<p>Below are the results of a randomised complete block experiment to compare the effects on the clotting time of plasma (mins) of four different methods for the treatment of plasma (<em>material extracted from Gallagher, 2023</em>). Samples of plasma were taken from a random sample of 8 volunteers and were subjected to all 4 treatments.</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -633,7 +633,7 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 <section id="exercise-2-spider-data" class="level1">
 <h1>Exercise 2: spider data</h1>
 <p><a href="https://www.sciencedirect.com/science/article/pii/S0378112705002021">Oxbrough et al.&nbsp;(2005)</a> investigated how spider communities change over forestation cycles in conifer and broadleaf plantations. They identified environmental and structural features of the habitat than can be used as indicators of spider biodiversity. Different plots were surveyed, each comprising 5 to 7 sampling sites separated by a minimum of 50 metres. More than 100 species of spiders were observed.</p>
-<p>The <code>Spiders.txt</code> file contains some of the data recorded from the original study. We are interested in analyzing the relationship between the spider diversity in each site with some environmental explanatory variables. The data set contains the following variables:</p>
+<p>The <code>Spiders.txt</code> file contains some of the data recorded from the original study (<em>material extracted from Zuur et al., 2013</em>). We are interested in analyzing the relationship between the spider diversity in each site with some environmental explanatory variables. The data set contains the following variables:</p>
 <ul>
 <li><code>DivIndex</code>: Variable of interest. Lower values of this index indicates less abundance of different species.</li>
 <li><code>HerbLayer</code>: Percentage of Herb Layer Cover</li>
@@ -927,7 +927,7 @@ Litter      -0.36550678 -0.0822844</code></pre>
 </section>
 <section id="exercise-3-split-plot-experiment-on-varieties-of-oats" class="level1">
 <h1>Exercise 3: split-plot experiment on varieties of oats</h1>
-<p>These data have been introduced by <a href="https://www.jstor.org/stable/2983638">Yates (1935)</a> as an example of a split-plot design. The experimental units were arranged into six block using a <span class="math inline">\(3 \times 4\)</span> full factorial design, with three varieties of oats and four nitrogen concentrations. The term <em>full factorial</em> means that every variety was used with every nitrogen concentration.</p>
+<p>These data have been introduced by <a href="https://www.jstor.org/stable/2983638">Yates (1935)</a> as an example of a split-plot design (<em>material extracted from Durban, 2014</em>). The experimental units were arranged into six block using a <span class="math inline">\(3 \times 4\)</span> full factorial design, with three varieties of oats and four nitrogen concentrations. The term <em>full factorial</em> means that every variety was used with every nitrogen concentration.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>Oats <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"Oats.txt"</span>, <span class="at">header=</span>T, <span class="at">stringsAsFactors =</span> T)</span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Oats, <span class="at">n=</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

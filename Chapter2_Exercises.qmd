@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Exercise 1
 
-Data from a clinical trial, involving 2 treatments (control and active drug), conducted at 8 randomly selected centers are discussed by [Beitler and Landis (1985)](https://www.jstor.org/stable/2530970). For the $i$-th center and $j$-th treatment, the proportion of $n_{ij}$ patients having a positive response ($y_{ij}$) is recorded below.
+Data from a clinical trial, involving 2 treatments (control and active drug), conducted at 8 randomly selected centres are discussed by [Beitler and Landis (1985)](https://www.jstor.org/stable/2530970). For the $i$-th center and $j$-th treatment, the proportion of $n_{ij}$ patients having a positive response ($y_{ij}$) is recorded below (*material extracted from Gallagher, 2023*):
 
 | **Centre** | **Treatment** | $y_{ij}$ | $n_{ij}$ |
 |:----------:|:-------------:|:--------:|:--------:|
