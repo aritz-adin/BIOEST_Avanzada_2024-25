@@ -54,7 +54,7 @@ We observe systematic differences between subjects and treatments.
 
 ### 2. Which variable should be included as a fixed effect, and which as a random effect? Make a *design plot* to visually compare the magnitude of the effects of the `Treatment` and `Volunteer` factors. 
 
-- We want to compare these particular types of treatments (*experimental factor*), so we use fixed effects for the `Type` factor.
+- We want to compare these particular types of treatments (*experimental factor*), so we use fixed effects for the `Treatment` factor.
 
 - The eight subjects represents a sample from the population about which we wish to make inferences (*random factor*), so we use random effects to model the `Volunteer` factor. 
 
@@ -74,7 +74,7 @@ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$
 where
 
 * $\beta_j$ is the mean clotting time from the $j$-th treatment
-* $u_i$ is a random variable associated with the $i$-th treatment
+* $u_i$ is a random variable associated with the $i$-th individual 
 * $\epsilon_{ij}$ are independent random errors
 
 Using matrix notation
@@ -87,13 +87,15 @@ $$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_
 \boldsymbol{0} & \boldsymbol{0} & \cdots & \boldsymbol{1}_4 \\
 \end{pmatrix} \boldsymbol{u} + \boldsymbol{\epsilon}$$
 
-or using Kronecker products
+<!-- or using Kronecker products -->
 
-$$y = (\boldsymbol{1}_8 \otimes \boldsymbol{I}_4)\boldsymbol{\beta} + (\boldsymbol{I}_8 \otimes \boldsymbol{1}_4)\boldsymbol{u} + \boldsymbol{\epsilon}$$
+<!-- $$y = (\boldsymbol{1}_8 \otimes \boldsymbol{I}_4)\boldsymbol{\beta} + (\boldsymbol{I}_8 \otimes \boldsymbol{1}_4)\boldsymbol{u} + \boldsymbol{\epsilon}$$ -->
 
-### 4. Choose the correct structure for the random effects
+### 4. Choose the correct structure for the random effects.
 
-```{r, message=FALSE}
+**COMPLETAR!**
+
+```{r, message=FALSE, include=FALSE}
 ## Fit the models ##
 library(lme4)
 
@@ -116,19 +118,23 @@ cbind(AIC=lapply(Models, AIC), BIC=lapply(Models, BIC))
 
 ### 5. Check if the treatment effect is significant.
 
-We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method
+**COMPLETAR!**
 
-```{r}
+<!-- We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method -->
+
+```{r, include=FALSE}
 M1 <- lmer(Clotting ~ 1 + (1|Volunteer), data=Plasma, REML=FALSE)
 M2 <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma, REML=FALSE)
 anova(M1,M2)
 ```
-We conclude that the `Treatment` effect is significant.
+<!-- We conclude that the `Treatment` effect is significant. -->
 
 ### 6. Verify whether the model assumptions are satisfied.
 
+**COMPLETAR!**
+
 **a) Assessing assumptions on the within-group errors**
-```{r}
+```{r, include=FALSE}
 plot(plasma.lmer)
 plot(plasma.lmer, Volunteer ~ resid(., type="pearson"), abline=0, lty=2)
 
@@ -138,10 +144,10 @@ qqline(res)
 
 shapiro.test(res)
 ```
-* We observe that the residuals are centered at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy). 
+<!-- * We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy).  -->
 
 **b) Assessing assumptions on the random-effects**
-```{r}
+```{r, include=FALSE}
 u <- unlist(ranef(plasma.lmer)$Volunteer)
 qqnorm(u)
 qqline(u)
@@ -149,7 +155,7 @@ qqline(u)
 shapiro.test(u)
 ```
 
-* Again, the are some issues with the assumptions for the random effects.
+<!-- * Again, the are some issues with the assumptions for the random effects. -->
 
 
 ### 7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.
@@ -242,7 +248,7 @@ plot.design(DivIndex ~ Plot, data=Spiders)
 
 ### 2. Choose the correct structure for the random effects
 
-```{r, message=FALSE}
+```{r, message=FALSE, include=FALSE}
 ## Fit the models ##
 library(lme4)
 
@@ -261,8 +267,8 @@ ranova(spiders.lmer)[2,6]/2
 
 ### 3. Check which environmental variables should be included in the model.
 
-We compare nested models:
-```{r}
+<!-- We compare nested models: -->
+```{r, include=FALSE}
 M0 <- lmer(DivIndex ~ 1 + (1|Plot), data=Spiders, REML=FALSE)
 M1 <- lmer(DivIndex ~ 1 + HerbLayer + (1|Plot), data=Spiders, REML=FALSE)
 M2 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + (1|Plot), data=Spiders, REML=FALSE)
@@ -270,10 +276,10 @@ M3 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg + (1|Plot), data=Spider
 anova(M0,M1,M2,M3)
 ```
 
-We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant.
+<!-- We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant. -->
 
-We can also check if a interaction between these two variables should be included in the model
-```{r}
+<!-- We can also check if a interaction between these two variables should be included in the model -->
+```{r, include=FALSE}
 M4 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + HerbLayer*Litter + (1|Plot), data=Spiders, REML=FALSE)
 anova(M2,M4)
 ```
@@ -281,18 +287,18 @@ anova(M2,M4)
 
 ### 4. Fit the final linear mixed model and write its equation
 
-We fit the following linear mixed model
-$$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$
-$$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$
-where
+<!-- We fit the following linear mixed model -->
+<!-- $$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$ -->
+<!-- $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ -->
+<!-- where -->
 
-* $y_{ij}$ is the diversity index at site $j$ in plot $i$
-* $\beta_0$ is a global intercept
-* $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively
-* $u_i$ is a random variable associated with the $i$-th surveyed plot
-* $\epsilon_{ij}$ are independent random errors
+<!-- * $y_{ij}$ is the diversity index at site $j$ in plot $i$ -->
+<!-- * $\beta_0$ is a global intercept -->
+<!-- * $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively -->
+<!-- * $u_i$ is a random variable associated with the $i$-th surveyed plot -->
+<!-- * $\epsilon_{ij}$ are independent random errors -->
 
-```{r}
+```{r, include=FALSE}
 ## Final model ##
 library(lme4)
 
@@ -303,7 +309,7 @@ summary(Model)
 ### 5. Verify whether the model assumptions are satisfied.
 
 **a) Assessing assumptions on the within-group errors**
-```{r}
+```{r, include=FALSE}
 plot(Model)
 plot(Model, Plot ~ resid(., type="pearson"), abline=0, lty=2)
 
@@ -315,7 +321,7 @@ shapiro.test(res)
 ```
 
 **b) Assessing assumptions on the random effects**
-```{r}
+```{r, include=FALSE}
 u <- unlist(ranef(Model)$Plot)
 qqnorm(u)
 qqline(u)
@@ -326,7 +332,7 @@ shapiro.test(u)
 ### 6. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Make a plot of observed vs predicted diversity index values.
 
 **a) Estimated fixed effects and 95% confidence intervals**
-```{r}
+```{r, include=FALSE}
 fixef(Model)
 
 beta.CI <- confint(Model, parm="beta_")
@@ -334,15 +340,15 @@ beta.CI
 ```
 
 **b) Estimated variance components and 95% confidence intervals**
-```{r}
+```{r, include=FALSE}
 VarCorr(Model)
 confint(Model, parm="theta_")
 ```
 
-Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.802$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots.
+<!-- Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.802$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots. -->
 
 **c) Compare observed and predicted diversity index values**
-```{r}
+```{r, include=FALSE}
 spiders.fitted <- cbind(Spiders,
                         DivIndex.fit=fitted(Model),
                         error=resid(Model))
@@ -382,8 +388,8 @@ plot.design(yield ~ Block*Variety*factor(nitro), data=Oats)
 
 ### 1. Choose the correct structure for the random effects
 
-We fit linear mixed models with all the fixed effects and different nested structures of random effects
-```{r}
+<!-- We fit linear mixed models with all the fixed effects and different nested structures of random effects -->
+```{r, include=FALSE}
 library(lme4)
 
 M0 <- lm(yield ~ 1 + Variety*factor(nitro), data=Oats)
@@ -391,21 +397,21 @@ M1 <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block), data=Oats)
 M2 <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block) + (1|Block:Variety), data=Oats)
 ```
 
-LRT for the variance component of the `Block` random effect
-```{r}
+<!-- LRT for the variance component of the `Block` random effect -->
+```{r, include=FALSE}
 test01 <- -2*(logLik(M0,REML=T)-logLik(M1,REML=T))
 mean(pchisq(test01,df=c(0,1),lower.tail=F))
 ```
 
-LRT for the variance component of the `Block:Variety` interaction random effect
-```{r}
+<!-- LRT for the variance component of the `Block:Variety` interaction random effect -->
+```{r, include=FALSE}
 test12 <- -2*(logLik(M1,REML=T)-logLik(M2,REML=T))
 mean(pchisq(test12,df=c(0,1),lower.tail=F))
 ```
 
 ### 2. Choose the correct structure for the fixed effects
-Again, we compare nested models with different structures of fixed effects
-```{r}
+<!-- Again, we compare nested models with different structures of fixed effects -->
+```{r, include=FALSE}
 M2a <- lmer(yield ~ 1 + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
 M2b <- lmer(yield ~ 1 + Variety + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
 M2c <- lmer(yield ~ 1 + Variety + factor(nitro) + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
@@ -413,22 +419,22 @@ M2d <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block) + (1|Block:Variety), d
 anova(M2a,M2b,M2c,M2d)
 ```
 
-We conclude that only the nitrogen level should be included as a significant fixed effect. 
+<!-- We conclude that only the nitrogen level should be included as a significant fixed effect.  -->
 
 ### 3. Fit the final linear mixed model and write its equation
 
-We fit the following linear mixed model
-$$y_{ijk} = \beta_k + u_i + v_{ij} + \epsilon_{ijk}$$
-$$u_i \sim N(0,\sigma^2_u), \quad v_{ij} \sim N(0,\sigma^2_v), \quad \epsilon_{ijk} \sim N(0,\sigma^2)$$
-where
+<!-- We fit the following linear mixed model -->
+<!-- $$y_{ijk} = \beta_k + u_i + v_{ij} + \epsilon_{ijk}$$ -->
+<!-- $$u_i \sim N(0,\sigma^2_u), \quad v_{ij} \sim N(0,\sigma^2_v), \quad \epsilon_{ijk} \sim N(0,\sigma^2)$$ -->
+<!-- where -->
 
-* $y_{ijk}$ is the yield in block $i$ for oat variety $j$ and nitrogen concentration level $k$
-* $\beta_k$ is the mean yield for nitrogen concentration level $k$
-* $u_i$ is a random variable associated with the $i$-th block
-* $v_{ij}$ is a interaction random variable associated with variety $j$ within the $i$-th block
-* $\epsilon_{ijk}$ are independent random errors
+<!-- * $y_{ijk}$ is the yield in block $i$ for oat variety $j$ and nitrogen concentration level $k$ -->
+<!-- * $\beta_k$ is the mean yield for nitrogen concentration level $k$ -->
+<!-- * $u_i$ is a random variable associated with the $i$-th block -->
+<!-- * $v_{ij}$ is a interaction random variable associated with variety $j$ within the $i$-th block -->
+<!-- * $\epsilon_{ijk}$ are independent random errors -->
 
-```{r}
+```{r, include=FALSE}
 ## Final model ##
 library(lme4)
 
@@ -439,7 +445,7 @@ summary(Model)
 ### 4. Verify whether the model assumptions are satisfied.
 
 **a) Assessing assumptions on the within-group errors**
-```{r}
+```{r, include=FALSE}
 plot(Model)
 plot(Model, Block ~ resid(., type="pearson"), abline=0, lty=2)
 plot(Model, Block:Variety ~ resid(., type="pearson"), abline=0, lty=2)
@@ -452,7 +458,7 @@ shapiro.test(res)
 ```
 
 **b) Assessing assumptions on the random-effects**
-```{r}
+```{r, include=FALSE}
 u <- t(ranef(Model)$Block)
 qqnorm(u)
 qqline(u)
@@ -467,7 +473,7 @@ shapiro.test(v)
 ### 5. Examine the model results.
 
 **a) Estimated fixed effects and 95% confidence intervals**
-```{r}
+```{r, include=FALSE}
 fixef(Model)
 
 beta.CI <- confint(Model, parm="beta_")
@@ -485,7 +491,7 @@ emmeans(Model, pairwise~factor(nitro), infer=T)
 ```
 
 **b) Estimated variance components and 95% confidence intervals**
-```{r}
+```{r, include=FALSE}
 VarCorr(Model)
 confint(Model, parm="theta_")
 
@@ -495,12 +501,12 @@ cor1
 cor2 <- 11.039^2/(11.039^2+14.506^2+12.75^2)
 cor2
 ```
-* $\frac{\sigma^2_u}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.425$, which mean that 42.5% of the overall variability can be attributed to the main block effect.
+<!-- * $\frac{\sigma^2_u}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.425$, which mean that 42.5% of the overall variability can be attributed to the main block effect. -->
 
-* $\frac{\sigma^2_v}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.246$, which mean that 24.6% of the overall variability can be attributed to the interaction effect.
+<!-- * $\frac{\sigma^2_v}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.246$, which mean that 24.6% of the overall variability can be attributed to the interaction effect. -->
 
 **c) Predicted random effects and yield values**
-```{r}
+```{r, include=FALSE}
 t(ranef(Model)$Block)
 t(ranef(Model)$`Block:Variety`)
 

@@ -3,7 +3,8 @@
 ## Exercises
 
 1.  [Linear Mixed Models](./Chapter1_Exercises.html)
-2.  [Generalized Linear Mixed Models](./Chapter2_Exercises.html)
+2.  Generalized Linear Mixed Models
+    <!-- 2. [Generalized Linear Mixed Models](./Chapter2_Exercises.html) -->
 
 ## References
 

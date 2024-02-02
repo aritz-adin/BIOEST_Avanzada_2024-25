@@ -10,8 +10,8 @@ website:
         text: Program
       - href: Chapter1_Exercises.qmd
         text: Chapter 1 - LMM
-      - href: Chapter2_Exercises.qmd
-        text: Chapter 2 - GLMM
+      # - href: Chapter2_Exercises.qmd
+      #   text: Chapter 2 - GLMM
 
 format:
   html:
