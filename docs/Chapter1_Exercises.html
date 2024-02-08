@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-the-data-intored-in-the-plasma.txt-file-convert-volunteer-and-treatment-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-subjects." id="toc-load-the-data-intored-in-the-plasma.txt-file-convert-volunteer-and-treatment-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-subjects." class="nav-link" data-scroll-target="#load-the-data-intored-in-the-plasma.txt-file-convert-volunteer-and-treatment-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-subjects.">1. Load the data intored in the <code>Plasma.txt</code> file, convert <code>Volunteer</code> and <code>Treatment</code> variables to factor, and make a descriptive plot to visualize differences between treatments and/or subjects.</a></li>
   <li><a href="#which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-treatment-and-volunteer-factors." id="toc-which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-treatment-and-volunteer-factors." class="nav-link" data-scroll-target="#which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-treatment-and-volunteer-factors.">2. Which variable should be included as a fixed effect, and which as a random effect? Make a <em>design plot</em> to visually compare the magnitude of the effects of the <code>Treatment</code> and <code>Volunteer</code> factors.</a></li>
   <li><a href="#write-the-linear-mixed-model-equation." id="toc-write-the-linear-mixed-model-equation." class="nav-link" data-scroll-target="#write-the-linear-mixed-model-equation.">3. Write the linear mixed model equation.</a></li>
-  <li><a href="#choose-the-correct-structure-for-the-random-effects." id="toc-choose-the-correct-structure-for-the-random-effects." class="nav-link" data-scroll-target="#choose-the-correct-structure-for-the-random-effects.">4. Choose the correct structure for the random effects.</a></li>
+  <li><a href="#test-if-random-effects-are-necessary." id="toc-test-if-random-effects-are-necessary." class="nav-link" data-scroll-target="#test-if-random-effects-are-necessary.">4. Test if random effects are necessary.</a></li>
   <li><a href="#check-if-the-treatment-effect-is-significant." id="toc-check-if-the-treatment-effect-is-significant." class="nav-link" data-scroll-target="#check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</a></li>
   <li><a href="#verify-whether-the-model-assumptions-are-satisfied." id="toc-verify-whether-the-model-assumptions-are-satisfied." class="nav-link" data-scroll-target="#verify-whether-the-model-assumptions-are-satisfied.">6. Verify whether the model assumptions are satisfied.</a></li>
   <li><a href="#examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-compute-the-predicted-random-effects-and-fitted-values." id="toc-examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-compute-the-predicted-random-effects-and-fitted-values." class="nav-link" data-scroll-target="#examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-compute-the-predicted-random-effects-and-fitted-values.">7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.</a></li>
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#exercise-2-spider-data" id="toc-exercise-2-spider-data" class="nav-link" data-scroll-target="#exercise-2-spider-data">Exercise 2: spider data</a>
   <ul class="collapse">
   <li><a href="#load-the-data-intored-in-the-spiders.txt-file-and-convert-plot-variable-to-factor.-make-descriptive-graphs-to-visualize-relationships-between-the-variable-of-interest-and-the-explanatory-variables-taking-into-account-the-plot-factor." id="toc-load-the-data-intored-in-the-spiders.txt-file-and-convert-plot-variable-to-factor.-make-descriptive-graphs-to-visualize-relationships-between-the-variable-of-interest-and-the-explanatory-variables-taking-into-account-the-plot-factor." class="nav-link" data-scroll-target="#load-the-data-intored-in-the-spiders.txt-file-and-convert-plot-variable-to-factor.-make-descriptive-graphs-to-visualize-relationships-between-the-variable-of-interest-and-the-explanatory-variables-taking-into-account-the-plot-factor.">1. Load the data intored in the <code>Spiders.txt</code> file and convert <code>Plot</code> variable to factor. Make descriptive graphs to visualize relationships between the variable of interest and the explanatory variables, taking into account the <code>Plot</code> factor.</a></li>
-  <li><a href="#choose-the-correct-structure-for-the-random-effects" id="toc-choose-the-correct-structure-for-the-random-effects" class="nav-link" data-scroll-target="#choose-the-correct-structure-for-the-random-effects">2. Choose the correct structure for the random effects</a></li>
+  <li><a href="#test-if-random-effects-are-necessary" id="toc-test-if-random-effects-are-necessary" class="nav-link" data-scroll-target="#test-if-random-effects-are-necessary">2. Test if random effects are necessary</a></li>
   <li><a href="#check-which-environmental-variables-should-be-included-in-the-model." id="toc-check-which-environmental-variables-should-be-included-in-the-model." class="nav-link" data-scroll-target="#check-which-environmental-variables-should-be-included-in-the-model.">3. Check which environmental variables should be included in the model.</a></li>
   <li><a href="#fit-the-final-linear-mixed-model-and-write-its-equation" id="toc-fit-the-final-linear-mixed-model-and-write-its-equation" class="nav-link" data-scroll-target="#fit-the-final-linear-mixed-model-and-write-its-equation">4. Fit the final linear mixed model and write its equation</a></li>
   <li><a href="#verify-whether-the-model-assumptions-are-satisfied.-1" id="toc-verify-whether-the-model-assumptions-are-satisfied.-1" class="nav-link" data-scroll-target="#verify-whether-the-model-assumptions-are-satisfied.-1">5. Verify whether the model assumptions are satisfied.</a></li>
@@ -163,7 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#exercise-3-split-plot-experiment-on-varieties-of-oats" id="toc-exercise-3-split-plot-experiment-on-varieties-of-oats" class="nav-link" data-scroll-target="#exercise-3-split-plot-experiment-on-varieties-of-oats">Exercise 3: split-plot experiment on varieties of oats</a>
   <ul class="collapse">
-  <li><a href="#choose-the-correct-structure-for-the-random-effects-1" id="toc-choose-the-correct-structure-for-the-random-effects-1" class="nav-link" data-scroll-target="#choose-the-correct-structure-for-the-random-effects-1">1. Choose the correct structure for the random effects</a></li>
+  <li><a href="#test-if-random-effects-are-necessary-1" id="toc-test-if-random-effects-are-necessary-1" class="nav-link" data-scroll-target="#test-if-random-effects-are-necessary-1">1. Test if random effects are necessary</a></li>
   <li><a href="#choose-the-correct-structure-for-the-fixed-effects" id="toc-choose-the-correct-structure-for-the-fixed-effects" class="nav-link" data-scroll-target="#choose-the-correct-structure-for-the-fixed-effects">2. Choose the correct structure for the fixed effects</a></li>
   <li><a href="#fit-the-final-linear-mixed-model-and-write-its-equation-1" id="toc-fit-the-final-linear-mixed-model-and-write-its-equation-1" class="nav-link" data-scroll-target="#fit-the-final-linear-mixed-model-and-write-its-equation-1">3. Fit the final linear mixed model and write its equation</a></li>
   <li><a href="#verify-whether-the-model-assumptions-are-satisfied.-2" id="toc-verify-whether-the-model-assumptions-are-satisfied.-2" class="nav-link" data-scroll-target="#verify-whether-the-model-assumptions-are-satisfied.-2">4. Verify whether the model assumptions are satisfied.</a></li>
@@ -364,8 +364,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- or using Kronecker products -->
 <!-- $$y = (\boldsymbol{1}_8 \otimes \boldsymbol{I}_4)\boldsymbol{\beta} + (\boldsymbol{I}_8 \otimes \boldsymbol{1}_4)\boldsymbol{u} + \boldsymbol{\epsilon}$$ -->
 </section>
-<section id="choose-the-correct-structure-for-the-random-effects." class="level3">
-<h3 class="anchored" data-anchor-id="choose-the-correct-structure-for-the-random-effects.">4. Choose the correct structure for the random effects.</h3>
+<section id="test-if-random-effects-are-necessary." class="level3">
+<h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary.">4. Test if random effects are necessary.</h3>
 <p><strong>COMPLETAR!</strong></p>
 </section>
 <section id="check-if-the-treatment-effect-is-significant." class="level3">
@@ -586,8 +586,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </div>
 </div>
 </section>
-<section id="choose-the-correct-structure-for-the-random-effects" class="level3">
-<h3 class="anchored" data-anchor-id="choose-the-correct-structure-for-the-random-effects">2. Choose the correct structure for the random effects</h3>
+<section id="test-if-random-effects-are-necessary" class="level3">
+<h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary">2. Test if random effects are necessary</h3>
 </section>
 <section id="check-which-environmental-variables-should-be-included-in-the-model." class="level3">
 <h3 class="anchored" data-anchor-id="check-which-environmental-variables-should-be-included-in-the-model.">3. Check which environmental variables should be included in the model.</h3>
@@ -669,8 +669,8 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<section id="choose-the-correct-structure-for-the-random-effects-1" class="level3">
-<h3 class="anchored" data-anchor-id="choose-the-correct-structure-for-the-random-effects-1">1. Choose the correct structure for the random effects</h3>
+<section id="test-if-random-effects-are-necessary-1" class="level3">
+<h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary-1">1. Test if random effects are necessary</h3>
 <!-- We fit linear mixed models with all the fixed effects and different nested structures of random effects -->
 <!-- LRT for the variance component of the `Block` random effect -->
 <!-- LRT for the variance component of the `Block:Variety` interaction random effect -->

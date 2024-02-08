@@ -91,7 +91,7 @@ $$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_
 
 <!-- $$y = (\boldsymbol{1}_8 \otimes \boldsymbol{I}_4)\boldsymbol{\beta} + (\boldsymbol{I}_8 \otimes \boldsymbol{1}_4)\boldsymbol{u} + \boldsymbol{\epsilon}$$ -->
 
-### 4. Choose the correct structure for the random effects.
+### 4. Test if random effects are necessary.
 
 **COMPLETAR!**
 
@@ -104,7 +104,7 @@ plasma.lmer <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma)
 
 ## LRT for the variance component sigma2_u ##
 LRT <- -2*(logLik(plasma.null,REML=T)-logLik(plasma.lmer,REML=T))
-mean(pchisq(LRT,df=c(0,1),lower.tail=F))
+mean(1-pchisq(LRT,df=c(0,1)))
 
 ## Using the ranova() function from lmerTest package ##
 library(lmerTest)
@@ -246,7 +246,7 @@ Design graph to compare average diversity indexes for each level of the `Plot` f
 plot.design(DivIndex ~ Plot, data=Spiders)
 ```
 
-### 2. Choose the correct structure for the random effects
+### 2. Test if random effects are necessary
 
 ```{r, message=FALSE, include=FALSE}
 ## Fit the models ##
@@ -257,7 +257,7 @@ spiders.lmer <- lmer(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg + (1|Plot), d
 
 ## LRT for the variance component sigma2_u ##
 LRT <- -2*(logLik(spiders.null,REML=T)-logLik(spiders.lmer,REML=T))
-mean(pchisq(LRT,df=c(0,1),lower.tail=F))
+mean(1-pchisq(LRT,df=c(0,1)))
 
 ## Using the ranova() function from lmerTest package ##
 library(lmerTest)
@@ -386,7 +386,7 @@ Design graph to compare average yields for each level of `Block`, `Variety` and 
 plot.design(yield ~ Block*Variety*factor(nitro), data=Oats)
 ```
 
-### 1. Choose the correct structure for the random effects
+### 1. Test if random effects are necessary
 
 <!-- We fit linear mixed models with all the fixed effects and different nested structures of random effects -->
 ```{r, include=FALSE}
@@ -400,13 +400,13 @@ M2 <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block) + (1|Block:Variety), da
 <!-- LRT for the variance component of the `Block` random effect -->
 ```{r, include=FALSE}
 test01 <- -2*(logLik(M0,REML=T)-logLik(M1,REML=T))
-mean(pchisq(test01,df=c(0,1),lower.tail=F))
+mean(1-pchisq(test01,df=c(0,1)))
 ```
 
 <!-- LRT for the variance component of the `Block:Variety` interaction random effect -->
 ```{r, include=FALSE}
 test12 <- -2*(logLik(M1,REML=T)-logLik(M2,REML=T))
-mean(pchisq(test12,df=c(0,1),lower.tail=F))
+mean(1-pchisq(test12,df=c(0,1)))
 ```
 
 ### 2. Choose the correct structure for the fixed effects
