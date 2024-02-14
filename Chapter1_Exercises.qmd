@@ -93,9 +93,7 @@ $$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_
 
 ### 4. Test if random effects are necessary.
 
-**COMPLETAR!**
-
-```{r, message=FALSE, include=FALSE}
+```{r, warning=FALSE, message=FALSE, include=TRUE}
 ## Fit the models ##
 library(lme4)
 
@@ -118,23 +116,19 @@ cbind(AIC=lapply(Models, AIC), BIC=lapply(Models, BIC))
 
 ### 5. Check if the treatment effect is significant.
 
-**COMPLETAR!**
+We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method
 
-<!-- We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method -->
-
-```{r, include=FALSE}
+```{r, include=TRUE}
 M1 <- lmer(Clotting ~ 1 + (1|Volunteer), data=Plasma, REML=FALSE)
 M2 <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma, REML=FALSE)
 anova(M1,M2)
 ```
-<!-- We conclude that the `Treatment` effect is significant. -->
+We conclude that the `Treatment` effect is significant.
 
 ### 6. Verify whether the model assumptions are satisfied.
 
-**COMPLETAR!**
-
 **a) Assessing assumptions on the within-group errors**
-```{r, include=FALSE}
+```{r, include=TRUE}
 plot(plasma.lmer)
 plot(plasma.lmer, Volunteer ~ resid(., type="pearson"), abline=0, lty=2)
 
@@ -144,10 +138,10 @@ qqline(res)
 
 shapiro.test(res)
 ```
-<!-- * We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy).  -->
+* We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy).
 
 **b) Assessing assumptions on the random-effects**
-```{r, include=FALSE}
+```{r, include=TRUE}
 u <- unlist(ranef(plasma.lmer)$Volunteer)
 qqnorm(u)
 qqline(u)
@@ -155,7 +149,7 @@ qqline(u)
 shapiro.test(u)
 ```
 
-<!-- * Again, the are some issues with the assumptions for the random effects. -->
+* Again, the are some issues with the assumptions for the random effects.
 
 
 ### 7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.
@@ -198,7 +192,11 @@ t(ranef(plasma.lmer)$Volunteer)
 plasma.fitted <- cbind(Plasma,
                        Clotting.fit=fitted(plasma.lmer),
                        error=resid(plasma.lmer))
-plasma.fitted
+head(plasma.fitted, n=8)
+
+plot(plasma.fitted$Clotting, plasma.fitted$Clotting.fit,
+     xlab="Observed", ylab="Predicted", main="Clotting time (mins)")
+lines(c(0,20), c(0,20))
 ```
 
 # Exercise 2: spider data
@@ -248,7 +246,7 @@ plot.design(DivIndex ~ Plot, data=Spiders)
 
 ### 2. Test if random effects are necessary
 
-```{r, message=FALSE, include=FALSE}
+```{r, message=FALSE, include=TRUE}
 ## Fit the models ##
 library(lme4)
 
@@ -267,8 +265,8 @@ ranova(spiders.lmer)[2,6]/2
 
 ### 3. Check which environmental variables should be included in the model.
 
-<!-- We compare nested models: -->
-```{r, include=FALSE}
+We compare nested models:
+```{r, include=TRUE}
 M0 <- lmer(DivIndex ~ 1 + (1|Plot), data=Spiders, REML=FALSE)
 M1 <- lmer(DivIndex ~ 1 + HerbLayer + (1|Plot), data=Spiders, REML=FALSE)
 M2 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + (1|Plot), data=Spiders, REML=FALSE)
@@ -276,10 +274,10 @@ M3 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg + (1|Plot), data=Spider
 anova(M0,M1,M2,M3)
 ```
 
-<!-- We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant. -->
+We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant.
 
-<!-- We can also check if a interaction between these two variables should be included in the model -->
-```{r, include=FALSE}
+We can also check if a interaction between these two variables should be included in the model
+```{r, include=TRUE}
 M4 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + HerbLayer*Litter + (1|Plot), data=Spiders, REML=FALSE)
 anova(M2,M4)
 ```
@@ -287,21 +285,19 @@ anova(M2,M4)
 
 ### 4. Fit the final linear mixed model and write its equation
 
-<!-- We fit the following linear mixed model -->
-<!-- $$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$ -->
-<!-- $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ -->
-<!-- where -->
+We fit the following linear mixed model
+$$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$
+$$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$
+where
 
-<!-- * $y_{ij}$ is the diversity index at site $j$ in plot $i$ -->
-<!-- * $\beta_0$ is a global intercept -->
-<!-- * $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively -->
-<!-- * $u_i$ is a random variable associated with the $i$-th surveyed plot -->
-<!-- * $\epsilon_{ij}$ are independent random errors -->
+* $y_{ij}$ is the diversity index at site $j$ in plot $i$
+* $\beta_0$ is a global intercept
+* $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively
+* $u_i$ is a random variable associated with the $i$-th surveyed plot
+* $\epsilon_{ij}$ are independent random errors
 
-```{r, include=FALSE}
+```{r, include=TRUE}
 ## Final model ##
-library(lme4)
-
 Model <- lmer(DivIndex ~ 1 + HerbLayer + Litter + (1|Plot), data=Spiders)
 summary(Model)
 ```
@@ -309,7 +305,7 @@ summary(Model)
 ### 5. Verify whether the model assumptions are satisfied.
 
 **a) Assessing assumptions on the within-group errors**
-```{r, include=FALSE}
+```{r, include=TRUE}
 plot(Model)
 plot(Model, Plot ~ resid(., type="pearson"), abline=0, lty=2)
 
@@ -321,7 +317,7 @@ shapiro.test(res)
 ```
 
 **b) Assessing assumptions on the random effects**
-```{r, include=FALSE}
+```{r, include=TRUE}
 u <- unlist(ranef(Model)$Plot)
 qqnorm(u)
 qqline(u)
@@ -332,7 +328,7 @@ shapiro.test(u)
 ### 6. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Make a plot of observed vs predicted diversity index values.
 
 **a) Estimated fixed effects and 95% confidence intervals**
-```{r, include=FALSE}
+```{r, include=TRUE}
 fixef(Model)
 
 beta.CI <- confint(Model, parm="beta_")
@@ -340,15 +336,15 @@ beta.CI
 ```
 
 **b) Estimated variance components and 95% confidence intervals**
-```{r, include=FALSE}
+```{r, include=TRUE}
 VarCorr(Model)
 confint(Model, parm="theta_")
 ```
 
-<!-- Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.802$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots. -->
+Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.23$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots.
 
 **c) Compare observed and predicted diversity index values**
-```{r, include=FALSE}
+```{r, include=TRUE}
 spiders.fitted <- cbind(Spiders,
                         DivIndex.fit=fitted(Model),
                         error=resid(Model))
