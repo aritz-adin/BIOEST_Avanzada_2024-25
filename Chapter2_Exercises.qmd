@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Exercise 1
 
-Data from a clinical trial, involving 2 treatments (control and active drug), conducted at 8 randomly selected centres are discussed by [Beitler and Landis (1985)](https://www.jstor.org/stable/2530970). For the $i$-th center and $j$-th treatment, the proportion of $n_{ij}$ patients having a positive response ($y_{ij}$) is recorded below (*material extracted from Gallagher, 2023*):
+Data from a clinical trial, involving 2 treatments (control and active drug), conducted at 11 randomly selected centres are discussed by [Beitler and Landis (1985)](https://www.jstor.org/stable/2530970). For the $i$-th center and $j$-th treatment, the proportion of $n_{ij}$ patients having a positive response ($y_{ij}$) is recorded below (*material extracted from Gallagher, 2023*):
 
 | **Centre** | **Treatment** | $y_{ij}$ | $n_{ij}$ |
 |:----------:|:-------------:|:--------:|:--------:|
@@ -35,7 +35,9 @@ head(multicentre)
 multicentre$centre <- as.factor(multicentre$centre)
 str(multicentre)
 ```
+
 We can make a descriptive plot of the data using the ggplot2 package
+
 ```{r}
 library(ggplot2)
 
@@ -44,36 +46,34 @@ ggplot(multicentre, aes(x=obs, y=centre, color=treat)) +
   geom_point() +
   labs(x="Observed probability", y="Centre")
 ```
+
 We observe systematic differences between centres.
 
-### 2. Which variable should be included as a fixed effect, and which as a random effect? Make a *design plot* to visually compare the magnitude of the effects of the `centre` and `treat` factors. 
+### 2. Which variable should be included as a fixed effect, and which as a random effect? Make a *design plot* to visually compare the magnitude of the effects of the `centre` and `treat` factors.
 
-- We want to compare these particular treatments (*experimental factor*), so we use fixed effects for the `treat` factor.
+-   We want to compare these particular treatments (*experimental factor*), so we use fixed effects for the `treat` factor.
 
-- The eight centres represents a random sample from the population about which we wish to make inferences (*random factor*), so we use random effects to model the `center` factor. 
+-   The eleven centres represents a random sample from the population about which we wish to make inferences (*random factor*), so we use random effects to model the `center` factor.
 
 ```{r, fig.cap="Average observed probabilities for each level of the factors `treat` and `center`"}
-plot.design(obs ~ centre*treat, data=multicentre)
+plot.design(obs ~ treat*centre, data=multicentre)
 ```
 
-- We see that the variability associated with the treatment is much lower than the variability associated with the centres.
+-   We see that the variability associated with the treatment is much lower than the variability associated with the centres.
 
-- We also see that the average probability of a positive response is lower in the *active drug* treatment.
-
+-   We also see that the average probability of a positive response is higher in the *active drug* treatment.
 
 ### 3. Write the mixed logistic regression model equation.
 
-$$y_{ij} | u_i  \sim Bin(n_{ij},\pi_{ij}), \quad i=1,\ldots,10 \quad \mbox{and} \quad j=1,2$$
-$$\mbox{logit}(\pi_{ij}) = \beta_0 + \beta_1*x_{j} + u_i, \quad u_i \sim N(0,\sigma_u^2)$$
-where
+$$y_{ij} | u_i  \sim Bin(n_{ij},\pi_{ij}), \quad i=1,\ldots,10 \quad \mbox{and} \quad j=1,2$$ $$\mbox{logit}(\pi_{ij}) = \beta_0 + \beta_1*x_{ij} + u_i, \quad u_i \sim N(0,\sigma_u^2)$$ where
 
-* $\pi_{ij}$ is the probability of a favourable outcome in a patient on the $i$-th centre and $j$-th treatment
-* $x_j$ is an indicator variable for treatment (0=control, 1=active drug)
-* $u_i$ is a random variable associated with the $i$-th centre
+-   $\pi_{ij}$ is the probability of a favourable outcome in a patient on the $i$-th centre and $j$-th treatment
+-   $x_{ij}$ is an indicator variable for treatment (0=control, 1=active drug)
+-   $u_i$ is a random variable associated with the $i$-th centre
 
 ### 4. Choose the correct structure for the random effects
 
-```{r, message=FALSE}
+```{r, message=FALSE, include=FALSE}
 ## Fit the models ##
 library(lme4)
 
@@ -82,58 +82,59 @@ M1 <- glmer(obs ~ 1 + treat + (1|centre), family="binomial", weights=n, data=mul
 
 ## LRT for the variance component sigma2_u ##
 LRT <- -2*(logLik(M0)-logLik(M1))
-mean(pchisq(LRT,df=c(0,1),lower.tail=F))
+mean(1-pchisq(LRT,df=c(0,1)))
 
 ## We can also use the AIC/BIC to compare the models ##
-Models <- list(multicentre.glm=M0, multicentre.glmer=M1)
-cbind(AIC=lapply(Models, AIC), BIC=lapply(Models, BIC))
+data.frame(AIC=c(AIC(M0), AIC(M1)),
+           BIC=c(BIC(M0), BIC(M1)),
+           row.names=c("multicentre.glm","multicentre.glmer"))
 ```
 
 ### 5. Check if the treatment effect is significant.
 
 We compare nested models (with and without `treat` factor) using the LRT with the `anova()` function
 
-```{r}
+```{r, include=FALSE}
 M1a <- glmer(obs ~ 1 + (1|centre), family="binomial", weights=n, data=multicentre)
 M1b <- glmer(obs ~ 1 + treat + (1|centre), family="binomial", weights=n, data=multicentre)
 anova(M1a,M1b)
 ```
-**We conclude that the treatment effect is not statistically significant.**
+<!-- **We conclude that the treatment effect is not statistically significant.** -->
 
-### 6. Using the model with fixed and random effects, interpret the odds ratio $e^{\beta_1}$ and compute a 95% confidence interval. Which is the median probability of a positive response on the control group?
 
-```{r}
+### 6. Using the model with fixed and random effects, which is the probability of a positive response on the active drug group? Interpret the odds ratio $e^{\beta_1}$ and compute a 95% confidence interval.
+
+```{r, include=FALSE}
 library(emmeans)
 emmeans(M1b, revpairwise~treat, type="response", inf=TRUE)
 ```
 
-* The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$.
+<!-- -  For $u_i=0$, the probability of a positive response over a population of centres under the active drug group ($x_{ij}=1$) is $\hat{\pi}_{ij}=0.376$ with a 95% confidence interval of $[0.220, 0.564]$. -->
 
-* The median (for $u_i=0$) probability of a positive response over a population of centres under the control group is $\hat{\pi}_i=0.376$ with a 95% confidence interval of $[0.220, 0.564]$.
+<!-- -   The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$. -->
+
 
 ### 7. Using the best model, verify whether the model assumptions on the random effects are satisfied.
 
-```{r}
+```{r, include=FALSE}
 Model <- M1a
 
 rand <- unlist(ranef(Model)$centre)
 qqnorm(rand)
 qqline(rand)
+
 shapiro.test(rand)
 ```
-
-We don't reject the null hypothesis of normality of the random effects.
+<!-- We don't reject the null hypothesis of normality of the random effects. -->
 
 ### 8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.
 
-```{r}
+```{r, include=FALSE}
 VarCorr(Model)
 confint(Model, parm="theta_")
 ```
 
-We can compute the intra-class correlation coefficient as
-$$\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,$$
-which means that 29% of the overall variability can be attributed to the differences between centres.
+<!-- We can compute the intra-class correlation coefficient as $$\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,$$ which means that 29% of the overall variability can be attributed to the differences between centres. -->
 
 ### 9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).
 
@@ -147,9 +148,9 @@ ggplot(multicentre, aes(x=obs, y=centre, color=treat)) +
   labs(x="Prob", y="Centre")
 ```
 
-# Exercise 2
+<!-- # Exercise 2 -->
 
-See [https://stats.oarc.ucla.edu/r/dae/mixed-effects-logistic-regression/](https://stats.oarc.ucla.edu/r/dae/mixed-effects-logistic-regression/)
+<!-- See <https://stats.oarc.ucla.edu/r/dae/mixed-effects-logistic-regression/> -->
 
-* Several continuous and discrete covariates
-* Possibility to include 2 random effects
+<!-- -   Several continuous and discrete covariates -->
+<!-- -   Possibility to include 2 random effects -->
