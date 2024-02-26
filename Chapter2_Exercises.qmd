@@ -71,9 +71,10 @@ $$y_{ij} | u_i  \sim Bin(n_{ij},\pi_{ij}), \quad i=1,\ldots,10 \quad \mbox{and} 
 -   $x_{ij}$ is an indicator variable for treatment (0=control, 1=active drug)
 -   $u_i$ is a random variable associated with the $i$-th centre
 
-### 4. Choose the correct structure for the random effects
 
-```{r, message=FALSE, include=FALSE}
+### 4. Test if random effects are necessary.
+
+```{r, message=FALSE, include=TRUE}
 ## Fit the models ##
 library(lme4)
 
@@ -94,29 +95,29 @@ data.frame(AIC=c(AIC(M0), AIC(M1)),
 
 We compare nested models (with and without `treat` factor) using the LRT with the `anova()` function
 
-```{r, include=FALSE}
+```{r, include=TRUE}
 M1a <- glmer(obs ~ 1 + (1|centre), family="binomial", weights=n, data=multicentre)
 M1b <- glmer(obs ~ 1 + treat + (1|centre), family="binomial", weights=n, data=multicentre)
 anova(M1a,M1b)
 ```
-<!-- **We conclude that the treatment effect is not statistically significant.** -->
+**We conclude that the treatment effect is not statistically significant.**
 
 
 ### 6. Using the model with fixed and random effects, which is the probability of a positive response on the active drug group? Interpret the odds ratio $e^{\beta_1}$ and compute a 95% confidence interval.
 
-```{r, include=FALSE}
+```{r, include=TRUE}
 library(emmeans)
 emmeans(M1b, revpairwise~treat, type="response", inf=TRUE)
 ```
 
-<!-- -  For $u_i=0$, the probability of a positive response over a population of centres under the active drug group ($x_{ij}=1$) is $\hat{\pi}_{ij}=0.376$ with a 95% confidence interval of $[0.220, 0.564]$. -->
+-  For $u_i=0$, the probability of a positive response over a population of centres under the active drug group ($x_{ij}=1$) is $\hat{\pi}_{ij}=0.376$ with a 95% confidence interval of $[0.220, 0.564]$.
 
-<!-- -   The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$. -->
+-   The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$.
 
 
 ### 7. Using the best model, verify whether the model assumptions on the random effects are satisfied.
 
-```{r, include=FALSE}
+```{r, include=TRUE}
 Model <- M1a
 
 rand <- unlist(ranef(Model)$centre)
@@ -125,16 +126,16 @@ qqline(rand)
 
 shapiro.test(rand)
 ```
-<!-- We don't reject the null hypothesis of normality of the random effects. -->
+We don't reject the null hypothesis of normality of the random effects.
 
 ### 8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.
 
-```{r, include=FALSE}
+```{r, include=TRUE}
 VarCorr(Model)
 confint(Model, parm="theta_")
 ```
 
-<!-- We can compute the intra-class correlation coefficient as $$\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,$$ which means that 29% of the overall variability can be attributed to the differences between centres. -->
+We can compute the intra-class correlation coefficient as $$\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,$$ which means that 29% of the overall variability can be attributed to the differences between centres.
 
 ### 9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).
 
@@ -148,9 +149,224 @@ ggplot(multicentre, aes(x=obs, y=centre, color=treat)) +
   labs(x="Prob", y="Centre")
 ```
 
-<!-- # Exercise 2 -->
+# Exercise 2
 
-<!-- See <https://stats.oarc.ucla.edu/r/dae/mixed-effects-logistic-regression/> -->
+A Health Maintenance Organization wants to know what patient and physician factors are most related to whether a patient’s lung cancer goes into remission after treatment as part of a larger study of treatment outcomes and quality of life in patients with lung cancer.
 
-<!-- -   Several continuous and discrete covariates -->
-<!-- -   Possibility to include 2 random effects -->
+The data has a multilevel structure where 8525 patients are nested within 407 doctors, who are in turn nested within 35 hospitals. The dataset contains either individual-level, doctor-level and hospital-level explanatory variables:
+
+* `remission`: response variable (0=no, 1=yes)
+* `age`: age of the patient (in years)
+* `IL6`: Interleukin-6 concentration in blood (pg/ml)
+* `CRP`: C-reactive protein concentration in blood (mg/dl)
+* `LengthofStay`: duration of a patient's hospital stay (in weeks)
+* `CancerStage`: lung cancer stage (I, II, III or IV)
+* `Smoking`: is the patient a smoker? (1=never, 2=former, 3=current)
+* `ID.doctor`: ID of the doctor
+* `ID.hospital`: ID of the hospital
+
+
+### 1. Load the data intored in the `Patients.txt` file. Convert `ID.doctor` and `ID.hospital` variables to factor. 
+
+```{r}
+patients <- read.table(file="patients.txt", header=T, stringsAsFactors=T)
+head(patients)
+
+patients$ID.doctor <- as.factor(patients$ID.doctor)
+patients$ID.hospital <- as.factor(patients$ID.hospital)
+patients$Smoking <- factor(patients$Smoking, levels=c("never","former","current"))
+str(patients)
+```
+### 2. Make some descriptive plots to visualize the relationship between variables.
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+
+## Explanatory continuous variables ##
+plot(patients[, c("Age","IL6","CRP","LengthofStay")])
+
+## Explanatory categorical variables ##
+ggplot(patients, aes(x=CancerStage, y=LengthofStay)) +
+  stat_sum(aes(size=after_stat(n), group=1)) +
+  scale_size_area(max_size=10)
+
+## Response variable change over explanatory variables ##
+tmp <- reshape2::melt(patients[, c("remission", "IL6", "CRP")], id.vars="remission")
+ggplot(tmp, aes(factor(remission), y = value, fill=factor(remission))) +
+  geom_boxplot() +
+  facet_wrap(~variable, scales="free_y")
+
+ggplot(patients, aes(x=Age, y=remission, color=Smoking)) +
+  geom_point() +
+  stat_smooth(method="glm", color="black", se=FALSE,
+              method.args = list(family=binomial)) +
+  ggtitle("Lung cancer remission after treatment by age and cancer stage") + 
+  facet_wrap(~ CancerStage)
+```
+
+### 3. Test if random effects are necessary.
+
+<!-- For $i=1,\ldots,407$ (doctors) and $k=1,\ldots,35$ (hospitals): -->
+
+<!-- * Model 0: $\quad \mbox{logit}(\pi_{ijk})=\beta_0$ -->
+
+<!-- * Model 1: $\quad \mbox{logit}(\pi_{ijk})=\beta_0 + u_i, \quad u_i \sim N(0,\sigma^2_u)$ -->
+
+<!-- * Model 2: $\quad \mbox{logit}(\pi_{ijk})=\beta_0 + u_i + v_j, \quad u_i \sim N(0,\sigma^2_u), \quad v_j \sim N(0,\sigma^2_u)$ -->
+
+<!-- where $\pi_{ijk}$ is the probability of a remission in lung cancer in a patient attended by the $i$-th doctor within the $j$-th hospital, $u_i$ is a doctor-level random effect and $v_k$ is a hospital-level random effect. -->
+
+```{r, message=FALSE, include=FALSE}
+library(lme4)
+
+# Logistic regression model without random effects #
+M0 <- glm(remission ~ 1, family="binomial", data=patients)
+
+# Logistic regression model with doctor-level random effects #
+M1 <- glmer(remission ~ 1 + (1|ID.doctor), family="binomial", data=patients)
+
+# Logistic regression model with doctor-level and hospital-level random effects #
+M2 <- glmer(remission ~ 1 + (1|ID.doctor) + (1|ID.hospital),
+            family="binomial", data=patients)
+
+## LRT for the variance components ##
+LRT1 <- -2*(logLik(M0)-logLik(M1))
+mean(1-pchisq(LRT1,df=c(0,1)))
+
+LRT2 <- -2*(logLik(M1)-logLik(M2))
+mean(1-pchisq(LRT2,df=c(0,1)))
+
+## Model comparison with AIC/BIC ##
+data.frame(AIC=c(AIC(M0), AIC(M1), AIC(M2)),
+           BIC=c(BIC(M0), BIC(M1), BIC(M2)),
+           row.names=c("glm","glmer.1","glmer.2"))
+```
+
+### 4. Hypothesis test for the fixed effects
+
+```{r, message=FALSE, include=FALSE}
+## Model with random effects + continuous predictors ##
+M3a <- glmer(remission ~ 1 + Age + IL6 + CRP + LengthofStay + (1|ID.doctor) + (1|ID.hospital),
+             family="binomial", data=patients)
+summary(M3a)
+anova(M2,M3a)
+
+## Model with random effects + continuous predictors + CancerStage ##
+M3b <- glmer(remission ~ 1 + Age + IL6 + CRP + LengthofStay + CancerStage + (1|ID.doctor) + (1|ID.hospital),
+             family="binomial", data=patients)
+summary(M3b)
+anova(M3a,M3b)
+
+M3c <- glmer(remission ~ 1 + IL6 + CRP + LengthofStay + CancerStage + (1|ID.doctor) + (1|ID.hospital),
+             family="binomial", data=patients)
+summary(M3c)
+anova(M3b,M3c)
+
+## Model with random effects + continuous predictors + CancerStage + Smoking ##
+M3d <- glmer(remission ~ 1 + IL6 + CRP + LengthofStay + CancerStage + Smoking + (1|ID.doctor) + (1|ID.hospital),
+             family="binomial", data=patients)
+summary(M3d)
+anova(M3b,M3d)
+```
+
+### 5. Fit the final logistic mixed model and write its equation. Compute intra-class correlation coefficient(s).
+
+<!-- $$\mbox{logit}(\pi_{ijk})= 0.55 - 0.058*IL6_{ijk} - 0.023*CRP_{ijk} - 0.152*Length_{ijk} - 0.55*I(CancerStage="II")_{ijk} - 1.214*I(CancerStage="III")_{ijk} - 2.581*I(CancerStage="IV")_{ijk} - 0.379*I(Smoking="former")_{ijk} - 0.465*I(Smoking="current")_{ijk}$$ -->
+
+```{r, message=FALSE, include=FALSE}
+Model.final <- M3d
+fixef(Model.final)
+
+VarCorr(Model.final)
+ICC.doctor <- 1.989^2/(1.989^2+0.471^2+3.29)
+ICC.doctor
+
+ICC.hospital <- 0.471^2/(1.989^2+0.471^2+3.29)
+ICC.hospital
+```
+
+### 6. Verify wether the model assumptions are satisfied
+
+```{r, message=FALSE, include=FALSE}
+rand.u <- unlist(ranef(Model.final)$ID.doctor)
+qqnorm(rand.u)
+qqline(rand.u)
+shapiro.test(rand.u)
+
+rand.v <- unlist(ranef(Model.final)$ID.hospital)
+qqnorm(rand.v)
+qqline(rand.v)
+shapiro.test(rand.v)
+```
+
+
+### 7. Examine the model results
+```{r, message=FALSE, include=FALSE}
+library(emmeans)
+
+emmeans(Model.final, pairwise ~ CancerStage|Smoking, type="response", inf=TRUE)
+```
+
+### 8. Compute predicted probabilities of remission in lung for different patient characteristics attended by ID.doctor=2 in ID.hospital=1.
+
+<!-- Predictions by cancer stage for non-smokers evaluated at mean `IL6`, `CRP` and `LenghOfStay` values: -->
+
+```{r, message=FALSE, include=FALSE}
+data.pred <- data.frame(ID.doctor=2, ID.hospital=1, IL6=mean(patients$IL6),
+                        CRP=mean(patients$CRP), LengthofStay=mean(patients$LengthofStay),
+                        CancerStage=c("I","II","III","IV"), Smoking="never")
+data.pred$prob <- predict(Model.final, newdata=data.pred, type="response")
+data.pred
+```
+
+<!-- Predictions by type of smoker for cancer stage I at mean `IL6`, `CRP` and `LenghOfStay` values: -->
+```{r, message=FALSE, include=FALSE}
+data.pred <- data.frame(ID.doctor=2, ID.hospital=1, IL6=mean(patients$IL6),
+                        CRP=mean(patients$CRP), LengthofStay=mean(patients$LengthofStay),
+                        CancerStage="I", Smoking=c("never","former","current"))
+data.pred$prob <- predict(Model.final, newdata=data.pred, type="response")
+data.pred
+```
+
+<!-- Predictions by IL6 for CancerStage="I" and Smoking="never": -->
+```{r, message=FALSE, include=FALSE}
+d <- 1:5
+n.doctors <- length(d)
+IL6.values <- as.numeric(quantile(patients$IL6,seq(0,1,0.05)))
+n.IL6 <- length(IL6.values)
+
+data.pred <- data.frame(ID.doctor=rep(d,each=n.IL6),
+                        ID.hospital=1, IL6=rep(IL6.values,n.doctors),
+                        CRP=mean(patients$CRP), LengthofStay=mean(patients$LengthofStay),
+                        CancerStage="I", Smoking="never")
+
+data.pred$prob <- predict(Model.final, newdata=data.pred, type="response")
+head(data.pred)
+
+ggplot(data.pred, aes(x=IL6, y=prob, group=ID.doctor, col=factor(ID.doctor))) +
+  geom_line() +
+  labs(x="IL6", y="Remission probabilities") + 
+  ylim(0,1) + 
+  ggtitle("CancerStage='I' and Smoking='never'")
+```
+
+<!-- Predictions by CRP for CancerStage="I" and Smoking="never": -->
+```{r, message=FALSE, include=FALSE}
+CRP.values <- as.numeric(quantile(patients$CRP,seq(0,1,0.05)))
+n.CRP <- length(CRP.values)
+
+data.pred <- data.frame(ID.doctor=rep(d,each=n.IL6),
+                        ID.hospital=1, IL6=mean(patients$IL6), 
+                        CRP=rep(CRP.values,n.doctors), LengthofStay=mean(patients$LengthofStay),
+                        CancerStage="I", Smoking="never")
+
+data.pred$prob <- predict(Model.final, newdata=data.pred, type="response")
+head(data.pred)
+
+ggplot(data.pred, aes(x=CRP, y=prob, group=ID.doctor, col=factor(ID.doctor))) +
+  geom_line() +
+  labs(x="CRP", y="Remission probabilities") + 
+  ylim(0,1) + 
+  ggtitle("CancerStage='I' and Smoking='never'") + 
+  facet_wrap(~ CancerStage)
+```

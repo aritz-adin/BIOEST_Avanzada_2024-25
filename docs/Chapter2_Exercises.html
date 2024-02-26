@@ -151,12 +151,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers." id="toc-load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers." class="nav-link" data-scroll-target="#load-the-data-intored-in-the-multicentre.txt-file-convert-centre-variables-to-factor-and-make-a-descriptive-plot-to-visualize-differences-between-treatments-andor-centers.">1. Load the data intored in the <code>multicentre.txt</code> file, convert <code>centre</code> variables to factor, and make a descriptive plot to visualize differences between treatments and/or centers.</a></li>
   <li><a href="#which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors." id="toc-which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors." class="nav-link" data-scroll-target="#which-variable-should-be-included-as-a-fixed-effect-and-which-as-a-random-effect-make-a-design-plot-to-visually-compare-the-magnitude-of-the-effects-of-the-centre-and-treat-factors.">2. Which variable should be included as a fixed effect, and which as a random effect? Make a <em>design plot</em> to visually compare the magnitude of the effects of the <code>centre</code> and <code>treat</code> factors.</a></li>
   <li><a href="#write-the-mixed-logistic-regression-model-equation." id="toc-write-the-mixed-logistic-regression-model-equation." class="nav-link" data-scroll-target="#write-the-mixed-logistic-regression-model-equation.">3. Write the mixed logistic regression model equation.</a></li>
-  <li><a href="#choose-the-correct-structure-for-the-random-effects" id="toc-choose-the-correct-structure-for-the-random-effects" class="nav-link" data-scroll-target="#choose-the-correct-structure-for-the-random-effects">4. Choose the correct structure for the random effects</a></li>
+  <li><a href="#test-if-random-effects-are-necessary." id="toc-test-if-random-effects-are-necessary." class="nav-link" data-scroll-target="#test-if-random-effects-are-necessary.">4. Test if random effects are necessary.</a></li>
   <li><a href="#check-if-the-treatment-effect-is-significant." id="toc-check-if-the-treatment-effect-is-significant." class="nav-link" data-scroll-target="#check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</a></li>
   <li><a href="#using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval." id="toc-using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval." class="nav-link" data-scroll-target="#using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.">6. Using the model with fixed and random effects, which is the probability of a positive response on the active drug group? Interpret the odds ratio <span class="math inline">\(e^{\beta_1}\)</span> and compute a 95% confidence interval.</a></li>
   <li><a href="#using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." id="toc-using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." class="nav-link" data-scroll-target="#using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied.">7. Using the best model, verify whether the model assumptions on the random effects are satisfied.</a></li>
   <li><a href="#which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." id="toc-which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." class="nav-link" data-scroll-target="#which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient.">8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.</a></li>
   <li><a href="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." id="toc-compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." class="nav-link" data-scroll-target="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).</a></li>
+  </ul></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a>
+  <ul class="collapse">
+  <li><a href="#load-the-data-intored-in-the-patients.txt-file.-convert-id.doctor-and-id.hospital-variables-to-factor." id="toc-load-the-data-intored-in-the-patients.txt-file.-convert-id.doctor-and-id.hospital-variables-to-factor." class="nav-link" data-scroll-target="#load-the-data-intored-in-the-patients.txt-file.-convert-id.doctor-and-id.hospital-variables-to-factor.">1. Load the data intored in the <code>Patients.txt</code> file. Convert <code>ID.doctor</code> and <code>ID.hospital</code> variables to factor.</a></li>
+  <li><a href="#make-some-descriptive-plots-to-visualize-the-relationship-between-variables." id="toc-make-some-descriptive-plots-to-visualize-the-relationship-between-variables." class="nav-link" data-scroll-target="#make-some-descriptive-plots-to-visualize-the-relationship-between-variables.">2. Make some descriptive plots to visualize the relationship between variables.</a></li>
+  <li><a href="#test-if-random-effects-are-necessary.-1" id="toc-test-if-random-effects-are-necessary.-1" class="nav-link" data-scroll-target="#test-if-random-effects-are-necessary.-1">3. Test if random effects are necessary.</a></li>
+  <li><a href="#hypothesis-test-for-the-fixed-effects" id="toc-hypothesis-test-for-the-fixed-effects" class="nav-link" data-scroll-target="#hypothesis-test-for-the-fixed-effects">4. Hypothesis test for the fixed effects</a></li>
+  <li><a href="#fit-the-final-logistic-mixed-model-and-write-its-equation.-compute-intra-class-correlation-coefficients." id="toc-fit-the-final-logistic-mixed-model-and-write-its-equation.-compute-intra-class-correlation-coefficients." class="nav-link" data-scroll-target="#fit-the-final-logistic-mixed-model-and-write-its-equation.-compute-intra-class-correlation-coefficients.">5. Fit the final logistic mixed model and write its equation. Compute intra-class correlation coefficient(s).</a></li>
+  <li><a href="#verify-wether-the-model-assumptions-are-satisfied" id="toc-verify-wether-the-model-assumptions-are-satisfied" class="nav-link" data-scroll-target="#verify-wether-the-model-assumptions-are-satisfied">6. Verify wether the model assumptions are satisfied</a></li>
+  <li><a href="#examine-the-model-results" id="toc-examine-the-model-results" class="nav-link" data-scroll-target="#examine-the-model-results">7. Examine the model results</a></li>
+  <li><a href="#compute-predicted-probabilities-of-remission-in-lung-for-different-patient-characteristics-attended-by-id.doctor2-in-id.hospital1." id="toc-compute-predicted-probabilities-of-remission-in-lung-for-different-patient-characteristics-attended-by-id.doctor2-in-id.hospital1." class="nav-link" data-scroll-target="#compute-predicted-probabilities-of-remission-in-lung-for-different-patient-characteristics-attended-by-id.doctor2-in-id.hospital1.">8. Compute predicted probabilities of remission in lung for different patient characteristics attended by ID.doctor=2 in ID.hospital=1.</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -320,32 +331,126 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><span class="math inline">\(u_i\)</span> is a random variable associated with the <span class="math inline">\(i\)</span>-th centre</li>
 </ul>
 </section>
-<section id="choose-the-correct-structure-for-the-random-effects" class="level3">
-<h3 class="anchored" data-anchor-id="choose-the-correct-structure-for-the-random-effects">4. Choose the correct structure for the random effects</h3>
+<section id="test-if-random-effects-are-necessary." class="level3">
+<h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary.">4. Test if random effects are necessary.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the models ##</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>M0 <span class="ot">&lt;-</span> <span class="fu">glm</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treat, <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">glmer</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treat <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>centre), <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## LRT for the variance component sigma2_u ##</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>LRT <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLik</span>(M0)<span class="sc">-</span><span class="fu">logLik</span>(M1))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pchisq</span>(LRT,<span class="at">df=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.885781e-15</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## We can also use the AIC/BIC to compare the models ##</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">AIC=</span><span class="fu">c</span>(<span class="fu">AIC</span>(M0), <span class="fu">AIC</span>(M1)),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">BIC=</span><span class="fu">c</span>(<span class="fu">BIC</span>(M0), <span class="fu">BIC</span>(M1)),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">row.names=</span><span class="fu">c</span>(<span class="st">"multicentre.glm"</span>,<span class="st">"multicentre.glmer"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       AIC      BIC
+multicentre.glm   196.8286 199.0107
+multicentre.glmer 138.4485 141.7216</code></pre>
+</div>
+</div>
 </section>
 <section id="check-if-the-treatment-effect-is-significant." class="level3">
 <h3 class="anchored" data-anchor-id="check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</h3>
 <p>We compare nested models (with and without <code>treat</code> factor) using the LRT with the <code>anova()</code> function</p>
-<!-- **We conclude that the treatment effect is not statistically significant.** -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>M1a <span class="ot">&lt;-</span> <span class="fu">glmer</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>centre), <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>M1b <span class="ot">&lt;-</span> <span class="fu">glmer</span>(obs <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> treat <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>centre), <span class="at">family=</span><span class="st">"binomial"</span>, <span class="at">weights=</span>n, <span class="at">data=</span>multicentre)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M1a,M1b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data: multicentre
+Models:
+M1a: obs ~ 1 + (1 | centre)
+M1b: obs ~ 1 + treat + (1 | centre)
+    npar    AIC    BIC  logLik deviance  Chisq Df Pr(&gt;Chisq)
+M1a    2 136.63 138.82 -66.317   132.63                     
+M1b    3 138.45 141.72 -66.224   132.45 0.1862  1     0.6661</code></pre>
+</div>
+</div>
+<p><strong>We conclude that the treatment effect is not statistically significant.</strong></p>
 </section>
 <section id="using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval." class="level3">
 <h3 class="anchored" data-anchor-id="using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.">6. Using the model with fixed and random effects, which is the probability of a positive response on the active drug group? Interpret the odds ratio <span class="math inline">\(e^{\beta_1}\)</span> and compute a 95% confidence interval.</h3>
-<!-- -  For $u_i=0$, the probability of a positive response over a population of centres under the active drug group ($x_{ij}=1$) is $\hat{\pi}_{ij}=0.376$ with a 95% confidence interval of $[0.220, 0.564]$. -->
-<!-- -   The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$. -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(M1b, revpairwise<span class="sc">~</span>treat, <span class="at">type=</span><span class="st">"response"</span>, <span class="at">inf=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+ treat    prob     SE  df asymp.LCL asymp.UCL null z.ratio p.value
+ control 0.359 0.0892 Inf     0.208     0.545  0.5  -1.497  0.1345
+ drug    0.376 0.0911 Inf     0.220     0.564  0.5  -1.301  0.1932
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale 
+Tests are performed on the logit scale 
+
+$contrasts
+ contrast       odds.ratio    SE  df asymp.LCL asymp.UCL null z.ratio p.value
+ drug / control       1.08 0.186 Inf     0.768      1.51    1   0.433  0.6651
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the log odds ratio scale 
+Tests are performed on the log odds ratio scale </code></pre>
+</div>
+</div>
+<ul>
+<li><p>For <span class="math inline">\(u_i=0\)</span>, the probability of a positive response over a population of centres under the active drug group (<span class="math inline">\(x_{ij}=1\)</span>) is <span class="math inline">\(\hat{\pi}_{ij}=0.376\)</span> with a 95% confidence interval of <span class="math inline">\([0.220, 0.564]\)</span>.</p></li>
+<li><p>The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of <span class="math inline">\([0.77, 1.51]\)</span>.</p></li>
+</ul>
 </section>
 <section id="using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." class="level3">
 <h3 class="anchored" data-anchor-id="using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied.">7. Using the best model, verify whether the model assumptions on the random effects are satisfied.</h3>
-<!-- We don't reject the null hypothesis of normality of the random effects. -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> M1a</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>rand <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">ranef</span>(Model)<span class="sc">$</span>centre)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(rand)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(rand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(rand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  rand
+W = 0.93053, p-value = 0.4162</code></pre>
+</div>
+</div>
+<p>We don’t reject the null hypothesis of normality of the random effects.</p>
 </section>
 <section id="which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." class="level3">
 <h3 class="anchored" data-anchor-id="which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient.">8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.</h3>
-<!-- We can compute the intra-class correlation coefficient as $$\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,$$ which means that 29% of the overall variability can be attributed to the differences between centres. -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VarCorr</span>(Model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Groups Name        Std.Dev.
+ centre (Intercept) 1.1692  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(Model, <span class="at">parm=</span><span class="st">"theta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Computing profile confidence intervals ...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          2.5 %   97.5 %
+.sig01 0.709846 2.060211</code></pre>
+</div>
+</div>
+<p>We can compute the intra-class correlation coefficient as <span class="math display">\[\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,\]</span> which means that 29% of the overall variability can be attributed to the differences between centres.</p>
 </section>
 <section id="compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." class="level3">
 <h3 class="anchored" data-anchor-id="compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>multicentre<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(Model, <span class="at">newdata=</span>multicentre, <span class="at">type=</span><span class="st">"response"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(multicentre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>multicentre<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(Model, <span class="at">newdata=</span>multicentre, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(multicentre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  centre   treat  y  n       obs      pred
 1      1    drug 11 36 0.3055556 0.3337400
@@ -355,10 +460,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 5      3    drug 14 19 0.7368421 0.4391549
 6      3 control  7 19 0.3684211 0.4391549</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(multicentre, <span class="fu">aes</span>(<span class="at">x=</span>obs, <span class="at">y=</span>centre, <span class="at">color=</span>treat)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>pred, <span class="at">y=</span>centre), <span class="at">shape=</span><span class="dv">8</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Prob"</span>, <span class="at">y=</span><span class="st">"Centre"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(multicentre, <span class="fu">aes</span>(<span class="at">x=</span>obs, <span class="at">y=</span>centre, <span class="at">color=</span>treat)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>pred, <span class="at">y=</span>centre), <span class="at">shape=</span><span class="dv">8</span>, <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Prob"</span>, <span class="at">y=</span><span class="st">"Centre"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -368,10 +473,125 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<!-- # Exercise 2 -->
-<!-- See <https://stats.oarc.ucla.edu/r/dae/mixed-effects-logistic-regression/> -->
-<!-- -   Several continuous and discrete covariates -->
-<!-- -   Possibility to include 2 random effects -->
+</section>
+</section>
+<section id="exercise-2" class="level1">
+<h1>Exercise 2</h1>
+<p>A Health Maintenance Organization wants to know what patient and physician factors are most related to whether a patient’s lung cancer goes into remission after treatment as part of a larger study of treatment outcomes and quality of life in patients with lung cancer.</p>
+<p>The data has a multilevel structure where 8525 patients are nested within 407 doctors, who are in turn nested within 35 hospitals. The dataset contains either individual-level, doctor-level and hospital-level explanatory variables:</p>
+<ul>
+<li><code>remission</code>: response variable (0=no, 1=yes)</li>
+<li><code>age</code>: age of the patient (in years)</li>
+<li><code>IL6</code>: Interleukin-6 concentration in blood (pg/ml)</li>
+<li><code>CRP</code>: C-reactive protein concentration in blood (mg/dl)</li>
+<li><code>LengthofStay</code>: duration of a patient’s hospital stay (in weeks)</li>
+<li><code>CancerStage</code>: lung cancer stage (I, II, III or IV)</li>
+<li><code>Smoking</code>: is the patient a smoker? (1=never, 2=former, 3=current)</li>
+<li><code>ID.doctor</code>: ID of the doctor</li>
+<li><code>ID.hospital</code>: ID of the hospital</li>
+</ul>
+<section id="load-the-data-intored-in-the-patients.txt-file.-convert-id.doctor-and-id.hospital-variables-to-factor." class="level3">
+<h3 class="anchored" data-anchor-id="load-the-data-intored-in-the-patients.txt-file.-convert-id.doctor-and-id.hospital-variables-to-factor.">1. Load the data intored in the <code>Patients.txt</code> file. Convert <code>ID.doctor</code> and <code>ID.hospital</code> variables to factor.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>patients <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file=</span><span class="st">"patients.txt"</span>, <span class="at">header=</span>T, <span class="at">stringsAsFactors=</span>T)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(patients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  remission Age    IL6   CRP LengthofStay CancerStage Smoking ID.doctor
+1         0  65  3.699 8.086            6          II  former         1
+2         0  54  2.627 0.803            6          II  former         1
+3         0  53 13.896 4.034            5          II   never         1
+4         0  41  3.008 2.126            5           I  former         1
+5         0  47  3.891 1.349            6          II   never         1
+6         0  52  1.418 2.195            5           I   never         1
+  ID.hospital
+1           1
+2           1
+3           1
+4           1
+5           1
+6           1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>patients<span class="sc">$</span>ID.doctor <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(patients<span class="sc">$</span>ID.doctor)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>patients<span class="sc">$</span>ID.hospital <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(patients<span class="sc">$</span>ID.hospital)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>patients<span class="sc">$</span>Smoking <span class="ot">&lt;-</span> <span class="fu">factor</span>(patients<span class="sc">$</span>Smoking, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"never"</span>,<span class="st">"former"</span>,<span class="st">"current"</span>))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(patients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   8525 obs. of  9 variables:
+ $ remission   : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ Age         : int  65 54 53 41 47 52 54 47 54 51 ...
+ $ IL6         : num  3.7 2.63 13.9 3.01 3.89 ...
+ $ CRP         : num  8.086 0.803 4.034 2.126 1.349 ...
+ $ LengthofStay: int  6 6 5 5 6 5 4 5 6 7 ...
+ $ CancerStage : Factor w/ 4 levels "I","II","III",..: 2 2 2 1 2 1 2 2 2 2 ...
+ $ Smoking     : Factor w/ 3 levels "never","former",..: 2 2 1 2 1 1 3 2 2 1 ...
+ $ ID.doctor   : Factor w/ 407 levels "1","2","3","4",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ ID.hospital : Factor w/ 35 levels "1","2","3","4",..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+</div>
+</section>
+<section id="make-some-descriptive-plots-to-visualize-the-relationship-between-variables." class="level3">
+<h3 class="anchored" data-anchor-id="make-some-descriptive-plots-to-visualize-the-relationship-between-variables.">2. Make some descriptive plots to visualize the relationship between variables.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Explanatory continuous variables ##</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(patients[, <span class="fu">c</span>(<span class="st">"Age"</span>,<span class="st">"IL6"</span>,<span class="st">"CRP"</span>,<span class="st">"LengthofStay"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Explanatory categorical variables ##</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(patients, <span class="fu">aes</span>(<span class="at">x=</span>CancerStage, <span class="at">y=</span>LengthofStay)) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_sum</span>(<span class="fu">aes</span>(<span class="at">size=</span><span class="fu">after_stat</span>(n), <span class="at">group=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_area</span>(<span class="at">max_size=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Response variable change over explanatory variables ##</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> reshape2<span class="sc">::</span><span class="fu">melt</span>(patients[, <span class="fu">c</span>(<span class="st">"remission"</span>, <span class="st">"IL6"</span>, <span class="st">"CRP"</span>)], <span class="at">id.vars=</span><span class="st">"remission"</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tmp, <span class="fu">aes</span>(<span class="fu">factor</span>(remission), <span class="at">y =</span> value, <span class="at">fill=</span><span class="fu">factor</span>(remission))) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales=</span><span class="st">"free_y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(patients, <span class="fu">aes</span>(<span class="at">x=</span>Age, <span class="at">y=</span>remission, <span class="at">color=</span>Smoking)) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">se=</span><span class="cn">FALSE</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family=</span>binomial)) <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Lung cancer remission after treatment by age and cancer stage"</span>) <span class="sc">+</span> </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> CancerStage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Chapter2_Exercises_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="test-if-random-effects-are-necessary.-1" class="level3">
+<h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary.-1">3. Test if random effects are necessary.</h3>
+<!-- For $i=1,\ldots,407$ (doctors) and $k=1,\ldots,35$ (hospitals): -->
+<!-- * Model 0: $\quad \mbox{logit}(\pi_{ijk})=\beta_0$ -->
+<!-- * Model 1: $\quad \mbox{logit}(\pi_{ijk})=\beta_0 + u_i, \quad u_i \sim N(0,\sigma^2_u)$ -->
+<!-- * Model 2: $\quad \mbox{logit}(\pi_{ijk})=\beta_0 + u_i + v_j, \quad u_i \sim N(0,\sigma^2_u), \quad v_j \sim N(0,\sigma^2_u)$ -->
+<!-- where $\pi_{ijk}$ is the probability of a remission in lung cancer in a patient attended by the $i$-th doctor within the $j$-th hospital, $u_i$ is a doctor-level random effect and $v_k$ is a hospital-level random effect. -->
+</section>
+<section id="hypothesis-test-for-the-fixed-effects" class="level3">
+<h3 class="anchored" data-anchor-id="hypothesis-test-for-the-fixed-effects">4. Hypothesis test for the fixed effects</h3>
+</section>
+<section id="fit-the-final-logistic-mixed-model-and-write-its-equation.-compute-intra-class-correlation-coefficients." class="level3">
+<h3 class="anchored" data-anchor-id="fit-the-final-logistic-mixed-model-and-write-its-equation.-compute-intra-class-correlation-coefficients.">5. Fit the final logistic mixed model and write its equation. Compute intra-class correlation coefficient(s).</h3>
+<!-- $$\mbox{logit}(\pi_{ijk})= 0.55 - 0.058*IL6_{ijk} - 0.023*CRP_{ijk} - 0.152*Length_{ijk} - 0.55*I(CancerStage="II")_{ijk} - 1.214*I(CancerStage="III")_{ijk} - 2.581*I(CancerStage="IV")_{ijk} - 0.379*I(Smoking="former")_{ijk} - 0.465*I(Smoking="current")_{ijk}$$ -->
+</section>
+<section id="verify-wether-the-model-assumptions-are-satisfied" class="level3">
+<h3 class="anchored" data-anchor-id="verify-wether-the-model-assumptions-are-satisfied">6. Verify wether the model assumptions are satisfied</h3>
+</section>
+<section id="examine-the-model-results" class="level3">
+<h3 class="anchored" data-anchor-id="examine-the-model-results">7. Examine the model results</h3>
+</section>
+<section id="compute-predicted-probabilities-of-remission-in-lung-for-different-patient-characteristics-attended-by-id.doctor2-in-id.hospital1." class="level3">
+<h3 class="anchored" data-anchor-id="compute-predicted-probabilities-of-remission-in-lung-for-different-patient-characteristics-attended-by-id.doctor2-in-id.hospital1.">8. Compute predicted probabilities of remission in lung for different patient characteristics attended by ID.doctor=2 in ID.hospital=1.</h3>
+<!-- Predictions by cancer stage for non-smokers evaluated at mean `IL6`, `CRP` and `LenghOfStay` values: -->
+<!-- Predictions by type of smoker for cancer stage I at mean `IL6`, `CRP` and `LenghOfStay` values: -->
+<!-- Predictions by IL6 for CancerStage="I" and Smoking="never": -->
+<!-- Predictions by CRP for CancerStage="I" and Smoking="never": -->
 
 
 </section>
