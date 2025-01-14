@@ -1,7 +1,7 @@
 ---
 title: "Chapter 1: Linear Mixed Models"
 author: "Aritz Adin y Jaione Etxeberria"
-date: "03-01-2024"
+date: "01-01-2025"
 date-format: "MMM/YYYY"
 format:
   html:
@@ -28,9 +28,7 @@ Below are the results of a randomised complete block experiment to compare the e
 |     **7**     |      8.9      |  9.0  |  9.2  | 10.4  |
 |     **8**     |      7.9      |  8.1  |  8.2  | 10.0  |
 
-
 ### 1. Load the data intored in the `Plasma.txt` file, convert `Volunteer` and `Treatment` variables to factor, and make a descriptive plot to visualize differences between treatments and/or subjects.
-
 
 ```{r}
 Plasma <- read.table("Plasma.txt", header=TRUE)
@@ -40,7 +38,9 @@ Plasma$Volunteer <- as.factor(Plasma$Volunteer)
 Plasma$Treatment <- as.factor(Plasma$Treatment)
 str(Plasma)
 ```
+
 We can make a descriptive plot of the data using the ggplot2 package
+
 ```{r}
 library(ggplot2)
 
@@ -49,33 +49,30 @@ ggplot(Plasma, aes(x=Clotting, y=Volunteer, color=Treatment)) +
   labs(x="Clotting time (mins)", y="Volunteer") +
   theme_minimal()
 ```
+
 We observe systematic differences between subjects and treatments.
 
+### 2. Which variable should be included as a fixed effect, and which as a random effect? Make a *design plot* to visually compare the magnitude of the effects of the `Treatment` and `Volunteer` factors.
 
-### 2. Which variable should be included as a fixed effect, and which as a random effect? Make a *design plot* to visually compare the magnitude of the effects of the `Treatment` and `Volunteer` factors. 
+-   We want to compare these particular types of treatments (*experimental factor*), so we use fixed effects for the `Treatment` factor.
 
-- We want to compare these particular types of treatments (*experimental factor*), so we use fixed effects for the `Treatment` factor.
-
-- The eight subjects represents a sample from the population about which we wish to make inferences (*random factor*), so we use random effects to model the `Volunteer` factor. 
+-   The eight subjects represents a sample from the population about which we wish to make inferences (*random factor*), so we use random effects to model the `Volunteer` factor.
 
 ```{r, fig.cap="Average clotting time for each level of the factors `Treatment` and `Volunteer`"}
 plot.design(Clotting ~ Treatment*Volunteer, data=Plasma)
 ```
 
-- We see that the variability associated with the `Treatment` factor is lower than the variability associated with the `Volunteer` factor.
+-   We see that the variability associated with the `Treatment` factor is lower than the variability associated with the `Volunteer` factor.
 
-- We also see that the average clotting time according to the treatment type is in the order $T1 \leq T2 \leq T3 \leq T4$.
-
+-   We also see that the average clotting time according to the treatment type is in the order $T1 \leq T2 \leq T3 \leq T4$.
 
 ### 3. Write the linear mixed model equation.
 
-$$y_{ij} = \beta_j + u_i + \epsilon_{ij}, \quad i=1,\ldots,8, \quad j=1,\ldots,4,$$
-$$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$
-where
+$$y_{ij} = \beta_j + u_i + \epsilon_{ij}, \quad i=1,\ldots,8, \quad j=1,\ldots,4,$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where
 
-* $\beta_j$ is the mean clotting time from the $j$-th treatment
-* $u_i$ is a random variable associated with the $i$-th individual 
-* $\epsilon_{ij}$ are independent random errors
+-   $\beta_j$ is the mean clotting time from the $j$-th treatment
+-   $u_i$ is a random variable associated with the $i$-th individual
+-   $\epsilon_{ij}$ are independent random errors
 
 Using matrix notation
 
@@ -123,11 +120,13 @@ M1 <- lmer(Clotting ~ 1 + (1|Volunteer), data=Plasma, REML=FALSE)
 M2 <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma, REML=FALSE)
 anova(M1,M2)
 ```
+
 We conclude that the `Treatment` effect is significant.
 
 ### 6. Verify whether the model assumptions are satisfied.
 
 **a) Assessing assumptions on the within-group errors**
+
 ```{r, include=TRUE}
 plot(plasma.lmer)
 plot(plasma.lmer, Volunteer ~ resid(., type="pearson"), abline=0, lty=2)
@@ -138,9 +137,11 @@ qqline(res)
 
 shapiro.test(res)
 ```
-* We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy).
+
+-   We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy).
 
 **b) Assessing assumptions on the random-effects**
+
 ```{r, include=TRUE}
 u <- unlist(ranef(plasma.lmer)$Volunteer)
 qqnorm(u)
@@ -149,12 +150,12 @@ qqline(u)
 shapiro.test(u)
 ```
 
-* Again, the are some issues with the assumptions for the random effects.
-
+-   Again, the are some issues with the assumptions for the random effects.
 
 ### 7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.
 
 **a) Estimated fixed effects and 95% confidence intervals**
+
 ```{r}
 fixef(plasma.lmer)
 vcov(plasma.lmer)
@@ -169,23 +170,29 @@ plot(1:j, fixef(plasma.lmer), pch=19, cex=0.5, xaxt="n",
 axis(1, at=1:j, labels=rownames(beta.CI))
 segments(1:j, beta.CI[,"2.5 %"], 1:j, beta.CI[,"97.5 %"])
 ```
+
 We can use the `emmeans()` function to compute pairwise comparisons between treatments
+
 ```{r}
 library(emmeans)
 emmeans(plasma.lmer, pairwise~Treatment, infer=T)
 ```
+
 Two out of six pairwise comparisons are statistically significant at the 5% level:
 
-* The mean clotting time for treatment 4 is significantly longer than that for treatments 1 and 2.
+-   The mean clotting time for treatment 4 is significantly longer than that for treatments 1 and 2.
 
 **b) Estimated variance components and 95% confidence intervals**
+
 ```{r}
 VarCorr(plasma.lmer)
 confint(plasma.lmer, parm="theta_")
 ```
+
 Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{1.63^2}{1.63^2+0.81^2}=0.802$. Which means that 80.1% of the overall variability can be attributed to the differences between the individuals.
 
 **c) Compute the predicted random effects and fitted values**
+
 ```{r}
 t(ranef(plasma.lmer)$Volunteer)
 
@@ -201,15 +208,15 @@ lines(c(0,20), c(0,20))
 
 # Exercise 2: spider data
 
-[Oxbrough et al. (2005)](https://www.sciencedirect.com/science/article/pii/S0378112705002021) investigated how spider communities change over forestation cycles in conifer and broadleaf plantations. They identified environmental and structural features of the habitat than can be used as indicators of spider biodiversity. Different plots were surveyed, each comprising 5 to 7 sampling sites separated by a minimum of 50 metres. More than 100 species of spiders were observed. 
+[Oxbrough et al. (2005)](https://www.sciencedirect.com/science/article/pii/S0378112705002021) investigated how spider communities change over forestation cycles in conifer and broadleaf plantations. They identified environmental and structural features of the habitat than can be used as indicators of spider biodiversity. Different plots were surveyed, each comprising 5 to 7 sampling sites separated by a minimum of 50 metres. More than 100 species of spiders were observed.
 
 The `Spiders.txt` file contains some of the data recorded from the original study (*material extracted from Zuur et al., 2013*). We are interested in analyzing the relationship between the spider diversity in each site with some environmental explanatory variables. The data set contains the following variables:
 
-* `DivIndex`: Variable of interest. Lower values of this index indicates less abundance of different species.
-* `HerbLayer`: Percentage of Herb Layer Cover
-* `Litter`: Percentage of Litter Content
-* `GroundVeg`: Percentage of Ground Vegetation
-* `Plot`: Factor indicating the surveyed plot.
+-   `DivIndex`: Variable of interest. Lower values of this index indicates less abundance of different species.
+-   `HerbLayer`: Percentage of Herb Layer Cover
+-   `Litter`: Percentage of Litter Content
+-   `GroundVeg`: Percentage of Ground Vegetation
+-   `Plot`: Factor indicating the surveyed plot.
 
 ### 1. Load the data intored in the `Spiders.txt` file and convert `Plot` variable to factor. Make descriptive graphs to visualize relationships between the variable of interest and the explanatory variables, taking into account the `Plot` factor.
 
@@ -220,6 +227,7 @@ str(Spiders)
 ```
 
 We can make descriptive graphs of the data using the ggplot2 package
+
 ```{r}
 library(ggplot2)
 
@@ -240,6 +248,7 @@ ggplot(Spiders, aes(x=GroundVeg, y=DivIndex, color=Plot)) +
 ```
 
 Design graph to compare average diversity indexes for each level of the `Plot` factor
+
 ```{r}
 plot.design(DivIndex ~ Plot, data=Spiders)
 ```
@@ -266,6 +275,7 @@ ranova(spiders.lmer)[2,6]/2
 ### 3. Check which environmental variables should be included in the model.
 
 We compare nested models:
+
 ```{r, include=TRUE}
 M0 <- lmer(DivIndex ~ 1 + (1|Plot), data=Spiders, REML=FALSE)
 M1 <- lmer(DivIndex ~ 1 + HerbLayer + (1|Plot), data=Spiders, REML=FALSE)
@@ -277,24 +287,21 @@ anova(M0,M1,M2,M3)
 We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant.
 
 We can also check if a interaction between these two variables should be included in the model
+
 ```{r, include=TRUE}
 M4 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + HerbLayer*Litter + (1|Plot), data=Spiders, REML=FALSE)
 anova(M2,M4)
 ```
 
-
 ### 4. Fit the final linear mixed model and write its equation
 
-We fit the following linear mixed model
-$$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$
-$$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$
-where
+We fit the following linear mixed model $$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where
 
-* $y_{ij}$ is the diversity index at site $j$ in plot $i$
-* $\beta_0$ is a global intercept
-* $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively
-* $u_i$ is a random variable associated with the $i$-th surveyed plot
-* $\epsilon_{ij}$ are independent random errors
+-   $y_{ij}$ is the diversity index at site $j$ in plot $i$
+-   $\beta_0$ is a global intercept
+-   $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively
+-   $u_i$ is a random variable associated with the $i$-th surveyed plot
+-   $\epsilon_{ij}$ are independent random errors
 
 ```{r, include=TRUE}
 ## Final model ##
@@ -305,6 +312,7 @@ summary(Model)
 ### 5. Verify whether the model assumptions are satisfied.
 
 **a) Assessing assumptions on the within-group errors**
+
 ```{r, include=TRUE}
 plot(Model)
 plot(Model, Plot ~ resid(., type="pearson"), abline=0, lty=2)
@@ -317,6 +325,7 @@ shapiro.test(res)
 ```
 
 **b) Assessing assumptions on the random effects**
+
 ```{r, include=TRUE}
 u <- unlist(ranef(Model)$Plot)
 qqnorm(u)
@@ -328,6 +337,7 @@ shapiro.test(u)
 ### 6. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Make a plot of observed vs predicted diversity index values.
 
 **a) Estimated fixed effects and 95% confidence intervals**
+
 ```{r, include=TRUE}
 fixef(Model)
 
@@ -336,6 +346,7 @@ beta.CI
 ```
 
 **b) Estimated variance components and 95% confidence intervals**
+
 ```{r, include=TRUE}
 VarCorr(Model)
 confint(Model, parm="theta_")
@@ -344,6 +355,7 @@ confint(Model, parm="theta_")
 Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.23$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots.
 
 **c) Compare observed and predicted diversity index values**
+
 ```{r, include=TRUE}
 spiders.fitted <- cbind(Spiders,
                         DivIndex.fit=fitted(Model),
@@ -385,6 +397,7 @@ plot.design(yield ~ Block*Variety*factor(nitro), data=Oats)
 ### 1. Test if random effects are necessary
 
 <!-- We fit linear mixed models with all the fixed effects and different nested structures of random effects -->
+
 ```{r, include=FALSE}
 library(lme4)
 
@@ -394,19 +407,23 @@ M2 <- lmer(yield ~ 1 + Variety*factor(nitro) + (1|Block) + (1|Block:Variety), da
 ```
 
 <!-- LRT for the variance component of the `Block` random effect -->
+
 ```{r, include=FALSE}
 test01 <- -2*(logLik(M0,REML=T)-logLik(M1,REML=T))
 mean(1-pchisq(test01,df=c(0,1)))
 ```
 
 <!-- LRT for the variance component of the `Block:Variety` interaction random effect -->
+
 ```{r, include=FALSE}
 test12 <- -2*(logLik(M1,REML=T)-logLik(M2,REML=T))
 mean(1-pchisq(test12,df=c(0,1)))
 ```
 
 ### 2. Choose the correct structure for the fixed effects
+
 <!-- Again, we compare nested models with different structures of fixed effects -->
+
 ```{r, include=FALSE}
 M2a <- lmer(yield ~ 1 + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
 M2b <- lmer(yield ~ 1 + Variety + (1|Block) + (1|Block:Variety), data=Oats, REML=FALSE)
@@ -420,14 +437,21 @@ anova(M2a,M2b,M2c,M2d)
 ### 3. Fit the final linear mixed model and write its equation
 
 <!-- We fit the following linear mixed model -->
+
 <!-- $$y_{ijk} = \beta_k + u_i + v_{ij} + \epsilon_{ijk}$$ -->
+
 <!-- $$u_i \sim N(0,\sigma^2_u), \quad v_{ij} \sim N(0,\sigma^2_v), \quad \epsilon_{ijk} \sim N(0,\sigma^2)$$ -->
+
 <!-- where -->
 
 <!-- * $y_{ijk}$ is the yield in block $i$ for oat variety $j$ and nitrogen concentration level $k$ -->
+
 <!-- * $\beta_k$ is the mean yield for nitrogen concentration level $k$ -->
+
 <!-- * $u_i$ is a random variable associated with the $i$-th block -->
+
 <!-- * $v_{ij}$ is a interaction random variable associated with variety $j$ within the $i$-th block -->
+
 <!-- * $\epsilon_{ijk}$ are independent random errors -->
 
 ```{r, include=FALSE}
@@ -441,6 +465,7 @@ summary(Model)
 ### 4. Verify whether the model assumptions are satisfied.
 
 **a) Assessing assumptions on the within-group errors**
+
 ```{r, include=FALSE}
 plot(Model)
 plot(Model, Block ~ resid(., type="pearson"), abline=0, lty=2)
@@ -454,6 +479,7 @@ shapiro.test(res)
 ```
 
 **b) Assessing assumptions on the random-effects**
+
 ```{r, include=FALSE}
 u <- t(ranef(Model)$Block)
 qqnorm(u)
@@ -469,6 +495,7 @@ shapiro.test(v)
 ### 5. Examine the model results.
 
 **a) Estimated fixed effects and 95% confidence intervals**
+
 ```{r, include=FALSE}
 fixef(Model)
 
@@ -487,6 +514,7 @@ emmeans(Model, pairwise~factor(nitro), infer=T)
 ```
 
 **b) Estimated variance components and 95% confidence intervals**
+
 ```{r, include=FALSE}
 VarCorr(Model)
 confint(Model, parm="theta_")
@@ -497,11 +525,13 @@ cor1
 cor2 <- 11.039^2/(11.039^2+14.506^2+12.75^2)
 cor2
 ```
+
 <!-- * $\frac{\sigma^2_u}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.425$, which mean that 42.5% of the overall variability can be attributed to the main block effect. -->
 
 <!-- * $\frac{\sigma^2_v}{\sigma^2_u+\sigma^2_v+\sigma^2}=0.246$, which mean that 24.6% of the overall variability can be attributed to the interaction effect. -->
 
 **c) Predicted random effects and yield values**
+
 ```{r, include=FALSE}
 t(ranef(Model)$Block)
 t(ranef(Model)$`Block:Variety`)

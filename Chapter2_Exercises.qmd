@@ -1,7 +1,7 @@
 ---
 title: "Chapter 2: Generalized Linear Mixed Models"
 author: "Aritz Adin y Jaione Etxeberria"
-date: "02-01-2024"
+date: "02-01-2025"
 date-format: "MMM/YYYY"
 format:
   html:
@@ -71,7 +71,6 @@ $$y_{ij} | u_i  \sim Bin(n_{ij},\pi_{ij}), \quad i=1,\ldots,10 \quad \mbox{and} 
 -   $x_{ij}$ is an indicator variable for treatment (0=control, 1=active drug)
 -   $u_i$ is a random variable associated with the $i$-th centre
 
-
 ### 4. Test if random effects are necessary.
 
 ```{r, message=FALSE, include=TRUE}
@@ -100,8 +99,8 @@ M1a <- glmer(obs ~ 1 + (1|centre), family="binomial", weights=n, data=multicentr
 M1b <- glmer(obs ~ 1 + treat + (1|centre), family="binomial", weights=n, data=multicentre)
 anova(M1a,M1b)
 ```
-**We conclude that the treatment effect is not statistically significant.**
 
+**We conclude that the treatment effect is not statistically significant.**
 
 ### 6. Using the model with fixed and random effects, which is the probability of a positive response on the active drug group? Interpret the odds ratio $e^{\beta_1}$ and compute a 95% confidence interval.
 
@@ -110,10 +109,9 @@ library(emmeans)
 emmeans(M1b, revpairwise~treat, type="response", inf=TRUE)
 ```
 
--  For $u_i=0$, the probability of a positive response over a population of centres under the active drug group ($x_{ij}=1$) is $\hat{\pi}_{ij}=0.376$ with a 95% confidence interval of $[0.220, 0.564]$.
+-   For $u_i=0$, the probability of a positive response over a population of centres under the active drug group ($x_{ij}=1$) is $\hat{\pi}_{ij}=0.376$ with a 95% confidence interval of $[0.220, 0.564]$.
 
 -   The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$.
-
 
 ### 7. Using the best model, verify whether the model assumptions on the random effects are satisfied.
 
@@ -126,6 +124,7 @@ qqline(rand)
 
 shapiro.test(rand)
 ```
+
 We don't reject the null hypothesis of normality of the random effects.
 
 ### 8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.
@@ -155,18 +154,17 @@ A Health Maintenance Organization wants to know what patient and physician facto
 
 The data has a multilevel structure where 8525 patients are nested within 407 doctors, who are in turn nested within 35 hospitals. The dataset contains either individual-level, doctor-level and hospital-level explanatory variables:
 
-* `remission`: response variable (0=no, 1=yes)
-* `age`: age of the patient (in years)
-* `IL6`: Interleukin-6 concentration in blood (pg/ml)
-* `CRP`: C-reactive protein concentration in blood (mg/dl)
-* `LengthofStay`: duration of a patient's hospital stay (in weeks)
-* `CancerStage`: lung cancer stage (I, II, III or IV)
-* `Smoking`: is the patient a smoker? (1=never, 2=former, 3=current)
-* `ID.doctor`: ID of the doctor
-* `ID.hospital`: ID of the hospital
+-   `remission`: response variable (0=no, 1=yes)
+-   `age`: age of the patient (in years)
+-   `IL6`: Interleukin-6 concentration in blood (pg/ml)
+-   `CRP`: C-reactive protein concentration in blood (mg/dl)
+-   `LengthofStay`: duration of a patient's hospital stay (in weeks)
+-   `CancerStage`: lung cancer stage (I, II, III or IV)
+-   `Smoking`: is the patient a smoker? (1=never, 2=former, 3=current)
+-   `ID.doctor`: ID of the doctor
+-   `ID.hospital`: ID of the hospital
 
-
-### 1. Load the data intored in the `Patients.txt` file. Convert `ID.doctor` and `ID.hospital` variables to factor. 
+### 1. Load the data intored in the `Patients.txt` file. Convert `ID.doctor` and `ID.hospital` variables to factor.
 
 ```{r}
 patients <- read.table(file="patients.txt", header=T, stringsAsFactors=T)
@@ -177,6 +175,7 @@ patients$ID.hospital <- as.factor(patients$ID.hospital)
 patients$Smoking <- factor(patients$Smoking, levels=c("never","former","current"))
 str(patients)
 ```
+
 ### 2. Make some descriptive plots to visualize the relationship between variables.
 
 ```{r, warning=FALSE, message=FALSE}
@@ -299,8 +298,8 @@ qqline(rand.v)
 shapiro.test(rand.v)
 ```
 
-
 ### 7. Examine the model results
+
 ```{r, message=FALSE, include=FALSE}
 library(emmeans)
 
@@ -320,6 +319,7 @@ data.pred
 ```
 
 <!-- Predictions by type of smoker for cancer stage I at mean `IL6`, `CRP` and `LenghOfStay` values: -->
+
 ```{r, message=FALSE, include=FALSE}
 data.pred <- data.frame(ID.doctor=2, ID.hospital=1, IL6=mean(patients$IL6),
                         CRP=mean(patients$CRP), LengthofStay=mean(patients$LengthofStay),
@@ -329,6 +329,7 @@ data.pred
 ```
 
 <!-- Predictions by IL6 for CancerStage="I" and Smoking="never": -->
+
 ```{r, message=FALSE, include=FALSE}
 d <- 1:5
 n.doctors <- length(d)
@@ -351,6 +352,7 @@ ggplot(data.pred, aes(x=IL6, y=prob, group=ID.doctor, col=factor(ID.doctor))) +
 ```
 
 <!-- Predictions by CRP for CancerStage="I" and Smoking="never": -->
+
 ```{r, message=FALSE, include=FALSE}
 CRP.values <- as.numeric(quantile(patients$CRP,seq(0,1,0.05)))
 n.CRP <- length(CRP.values)
