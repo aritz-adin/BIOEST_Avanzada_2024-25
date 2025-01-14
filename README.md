@@ -1,9 +1,9 @@
-# Bioestadística Avanzada / Curso 2023-24
+# Bioestadística Avanzada / Curso 2024-25
 
 ## Exercises
 
-1.  [Linear Mixed Models](./Chapter1_Exercises.html)
-2.  [Generalized Linear Mixed Models](./Chapter2_Exercises.html)
+1.  Linear Mixed Models
+2.  Generalized Linear Mixed Models
 
 ## References
 

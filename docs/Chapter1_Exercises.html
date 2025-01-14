@@ -8,7 +8,7 @@
 
 <meta name="author" content="Aritz Adin y Jaione Etxeberria">
 
-<title>BIOEST AVANZADA 2023-24 - Chapter 1: Linear Mixed Models</title>
+<title>BIOEST AVANZADA 2024-25 - Chapter 1: Linear Mixed Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">BIOEST AVANZADA 2023-24</span>
+    <span class="navbar-title">BIOEST AVANZADA 2024-25</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -315,14 +315,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We can make a descriptive plot of the data using the ggplot2 package</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'ggplot2' was built under R version 4.3.3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Plasma, <span class="fu">aes</span>(<span class="at">x=</span>Clotting, <span class="at">y=</span>Volunteer, <span class="at">color=</span>Treatment)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Clotting time (mins)"</span>, <span class="at">y=</span><span class="st">"Volunteer"</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Plasma, <span class="fu">aes</span>(<span class="at">x=</span>Clotting, <span class="at">y=</span>Volunteer, <span class="at">color=</span>Treatment)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Clotting time (mins)"</span>, <span class="at">y=</span><span class="st">"Volunteer"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -336,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The eight subjects represents a sample from the population about which we wish to make inferences (<em>random factor</em>), so we use random effects to model the <code>Volunteer</code> factor.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(Clotting <span class="sc">~</span> Treatment<span class="sc">*</span>Volunteer, <span class="at">data=</span>Plasma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(Clotting <span class="sc">~</span> Treatment<span class="sc">*</span>Volunteer, <span class="at">data=</span>Plasma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -373,21 +371,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="test-if-random-effects-are-necessary." class="level3">
 <h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary.">4. Test if random effects are necessary.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the models ##</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plasma.null <span class="ot">&lt;-</span> <span class="fu">lm</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment, <span class="at">data=</span>Plasma)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plasma.lmer <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## LRT for the variance component sigma2_u ##</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>LRT <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLik</span>(plasma.null,<span class="at">REML=</span>T)<span class="sc">-</span><span class="fu">logLik</span>(plasma.lmer,<span class="at">REML=</span>T))</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pchisq</span>(LRT,<span class="at">df=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the models ##</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plasma.null <span class="ot">&lt;-</span> <span class="fu">lm</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment, <span class="at">data=</span>Plasma)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plasma.lmer <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## LRT for the variance component sigma2_u ##</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>LRT <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLik</span>(plasma.null,<span class="at">REML=</span>T)<span class="sc">-</span><span class="fu">logLik</span>(plasma.lmer,<span class="at">REML=</span>T))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pchisq</span>(LRT,<span class="at">df=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.290542e-07</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using the ranova() function from lmerTest package ##</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using the ranova() function from lmerTest package ##</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>ANOVA-like table for random-effects: Single term deletions
 
@@ -399,13 +397,13 @@ Clotting ~ Treatment + (1 | Volunteer) - 1
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(plasma.lmer)[<span class="dv">2</span>,<span class="dv">6</span>]<span class="sc">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(plasma.lmer)[<span class="dv">2</span>,<span class="dv">6</span>]<span class="sc">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.290542e-07</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## We can also use the AIC/BIC to compare the models ##</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Models <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">plasma.null=</span>plasma.null, <span class="at">plasma.lmer=</span>plasma.lmer)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">AIC=</span><span class="fu">lapply</span>(Models, AIC), <span class="at">BIC=</span><span class="fu">lapply</span>(Models, BIC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## We can also use the AIC/BIC to compare the models ##</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Models <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">plasma.null=</span>plasma.null, <span class="at">plasma.lmer=</span>plasma.lmer)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">AIC=</span><span class="fu">lapply</span>(Models, AIC), <span class="at">BIC=</span><span class="fu">lapply</span>(Models, BIC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            AIC      BIC     
 plasma.null 134.8699 142.1986
@@ -417,9 +415,9 @@ plasma.lmer 107.8852 116.6796</code></pre>
 <h3 class="anchored" data-anchor-id="check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</h3>
 <p>We compare nested models (with and without <code>Treatment</code> factor) using the LRT with the <code>anova()</code> function base on fitting through the ML method</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M1,M2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M1,M2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data: Plasma
 Models:
@@ -438,21 +436,21 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h3 class="anchored" data-anchor-id="verify-whether-the-model-assumptions-are-satisfied.">6. Verify whether the model assumptions are satisfied.</h3>
 <p><strong>a) Assessing assumptions on the within-group errors</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma.lmer, Volunteer <span class="sc">~</span> <span class="fu">resid</span>(., <span class="at">type=</span><span class="st">"pearson"</span>), <span class="at">abline=</span><span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma.lmer, Volunteer <span class="sc">~</span> <span class="fu">resid</span>(., <span class="at">type=</span><span class="st">"pearson"</span>), <span class="at">abline=</span><span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">resid</span>(plasma.lmer, <span class="at">type=</span><span class="st">"pearson"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(res)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">resid</span>(plasma.lmer, <span class="at">type=</span><span class="st">"pearson"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(res)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -466,13 +464,13 @@ W = 0.94578, p-value = 0.1093</code></pre>
 </ul>
 <p><strong>b) Assessing assumptions on the random-effects</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">ranef</span>(plasma.lmer)<span class="sc">$</span>Volunteer)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(u)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">ranef</span>(plasma.lmer)<span class="sc">$</span>Volunteer)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(u)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -489,12 +487,12 @@ W = 0.76565, p-value = 0.01215</code></pre>
 <h3 class="anchored" data-anchor-id="examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-compute-the-predicted-random-effects-and-fitted-values.">7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.</h3>
 <p><strong>a) Estimated fixed effects and 95% confidence intervals</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Treatment1 Treatment2 Treatment3 Treatment4 
     9.3000     9.7125     9.9375    11.0250 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4 x 4 Matrix of class "dpoMatrix"
            Treatment1 Treatment2 Treatment3 Treatment4
@@ -503,11 +501,11 @@ Treatment2  0.3321317  0.4141183  0.3321317  0.3321317
 Treatment3  0.3321317  0.3321317  0.4141183  0.3321317
 Treatment4  0.3321317  0.3321317  0.3321317  0.4141183</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>beta.CI <span class="ot">&lt;-</span> <span class="fu">confint</span>(plasma.lmer, <span class="at">parm=</span><span class="st">"beta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>beta.CI <span class="ot">&lt;-</span> <span class="fu">confint</span>(plasma.lmer, <span class="at">parm=</span><span class="st">"beta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Computing profile confidence intervals ...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>beta.CI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>beta.CI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              2.5 %   97.5 %
 Treatment1 8.000009 10.59999
@@ -515,20 +513,25 @@ Treatment2 8.412509 11.01249
 Treatment3 8.637509 11.23749
 Treatment4 9.725009 12.32499</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span>j, <span class="fu">fixef</span>(plasma.lmer), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">xaxt=</span><span class="st">"n"</span>,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fl">0.5</span><span class="sc">+</span><span class="fu">c</span>(<span class="dv">0</span>,j), <span class="at">ylim=</span><span class="fu">range</span>(<span class="fu">c</span>(beta.CI))<span class="sc">*</span><span class="fu">c</span>(<span class="fl">0.9</span>,<span class="fl">1.1</span>),</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Type"</span>, <span class="at">ylab=</span><span class="st">"Estimated fixed effects"</span>)</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at=</span><span class="dv">1</span><span class="sc">:</span>j, <span class="at">labels=</span><span class="fu">rownames</span>(beta.CI))</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="dv">1</span><span class="sc">:</span>j, beta.CI[,<span class="st">"2.5 %"</span>], <span class="dv">1</span><span class="sc">:</span>j, beta.CI[,<span class="st">"97.5 %"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span>j, <span class="fu">fixef</span>(plasma.lmer), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">xaxt=</span><span class="st">"n"</span>,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fl">0.5</span><span class="sc">+</span><span class="fu">c</span>(<span class="dv">0</span>,j), <span class="at">ylim=</span><span class="fu">range</span>(<span class="fu">c</span>(beta.CI))<span class="sc">*</span><span class="fu">c</span>(<span class="fl">0.9</span>,<span class="fl">1.1</span>),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Type"</span>, <span class="at">ylab=</span><span class="st">"Estimated fixed effects"</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at=</span><span class="dv">1</span><span class="sc">:</span>j, <span class="at">labels=</span><span class="fu">rownames</span>(beta.CI))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="dv">1</span><span class="sc">:</span>j, beta.CI[,<span class="st">"2.5 %"</span>], <span class="dv">1</span><span class="sc">:</span>j, beta.CI[,<span class="st">"97.5 %"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can use the <code>emmeans()</code> function to compute pairwise comparisons between treatments</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(plasma.lmer, pairwise<span class="sc">~</span>Treatment, <span class="at">infer=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome to emmeans.
+Caution: You lose important information if you filter this package's results.
+See '? untidy'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(plasma.lmer, pairwise<span class="sc">~</span>Treatment, <span class="at">infer=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$emmeans
  Treatment emmean    SE   df lower.CL upper.CL t.ratio p.value
