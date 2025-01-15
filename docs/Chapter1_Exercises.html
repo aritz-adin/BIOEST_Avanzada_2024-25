@@ -122,6 +122,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./index.html" rel="" target="">
  <span class="menu-text">Program</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./Chapter1_Exercises.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Chapter 1 - LMM</span></a>
+  </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
 </div>
@@ -326,7 +330,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The eight subjects represents a sample from the population about which we wish to make inferences (<em>random factor</em>), so we use random effects to model the <code>Volunteer</code> factor.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(Clotting <span class="sc">~</span> Treatment<span class="sc">*</span>Volunteer, <span class="at">data=</span>Plasma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(Clotting <span class="sc">~</span> Treatment <span class="sc">+</span> Volunteer, <span class="at">data=</span>Plasma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -343,267 +347,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="write-the-linear-mixed-model-equation." class="level3">
 <h3 class="anchored" data-anchor-id="write-the-linear-mixed-model-equation.">3. Write the linear mixed model equation.</h3>
-<p><span class="math display">\[y_{ij} = \beta_j + u_i + \epsilon_{ij}, \quad i=1,\ldots,8, \quad j=1,\ldots,4,\]</span> <span class="math display">\[u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)\]</span> where</p>
-<ul>
-<li><span class="math inline">\(\beta_j\)</span> is the mean clotting time from the <span class="math inline">\(j\)</span>-th treatment</li>
-<li><span class="math inline">\(u_i\)</span> is a random variable associated with the <span class="math inline">\(i\)</span>-th individual</li>
-<li><span class="math inline">\(\epsilon_{ij}\)</span> are independent random errors</li>
-</ul>
-<p>Using matrix notation</p>
-<p><span class="math display">\[\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_4 \end{pmatrix} \begin{pmatrix} \beta_1 \\ \vdots \\ \beta_4 \end{pmatrix} +
-\begin{pmatrix}
-\boldsymbol{1}_4 &amp; \boldsymbol{0} &amp; \ldots &amp; \boldsymbol{0} \\
-\boldsymbol{0} &amp; \boldsymbol{1}_4 &amp; \ldots &amp; \boldsymbol{0} \\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-\boldsymbol{0} &amp; \boldsymbol{0} &amp; \cdots &amp; \boldsymbol{1}_4 \\
-\end{pmatrix} \boldsymbol{u} + \boldsymbol{\epsilon}\]</span></p>
+<!-- $$y_{ij} = \beta_j + u_i + \epsilon_{ij}, \quad i=1,\ldots,8, \quad j=1,\ldots,4,$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where -->
+<!-- -   $\beta_j$ is the mean clotting time from the $j$-th treatment -->
+<!-- -   $u_i$ is a random variable associated with the $i$-th individual -->
+<!-- -   $\epsilon_{ij}$ are independent random errors -->
+<!-- Using matrix notation -->
+<!-- $$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_4 \end{pmatrix} \begin{pmatrix} \beta_1 \\ \vdots \\ \beta_4 \end{pmatrix} + -->
+<!-- \begin{pmatrix} -->
+<!-- \boldsymbol{1}_4 & \boldsymbol{0} & \ldots & \boldsymbol{0} \\ -->
+<!-- \boldsymbol{0} & \boldsymbol{1}_4 & \ldots & \boldsymbol{0} \\ -->
+<!-- \vdots & \vdots & \ddots & \vdots \\ -->
+<!-- \boldsymbol{0} & \boldsymbol{0} & \cdots & \boldsymbol{1}_4 \\ -->
+<!-- \end{pmatrix} \boldsymbol{u} + \boldsymbol{\epsilon}$$ -->
 <!-- or using Kronecker products -->
 <!-- $$y = (\boldsymbol{1}_8 \otimes \boldsymbol{I}_4)\boldsymbol{\beta} + (\boldsymbol{I}_8 \otimes \boldsymbol{1}_4)\boldsymbol{u} + \boldsymbol{\epsilon}$$ -->
 </section>
 <section id="test-if-random-effects-are-necessary." class="level3">
 <h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary.">4. Test if random effects are necessary.</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the models ##</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plasma.null <span class="ot">&lt;-</span> <span class="fu">lm</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment, <span class="at">data=</span>Plasma)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plasma.lmer <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## LRT for the variance component sigma2_u ##</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>LRT <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLik</span>(plasma.null,<span class="at">REML=</span>T)<span class="sc">-</span><span class="fu">logLik</span>(plasma.lmer,<span class="at">REML=</span>T))</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pchisq</span>(LRT,<span class="at">df=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.290542e-07</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using the ranova() function from lmerTest package ##</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>ANOVA-like table for random-effects: Single term deletions
-
-Model:
-Clotting ~ Treatment + (1 | Volunteer) - 1
-                npar  logLik    AIC    LRT Df Pr(&gt;Chisq)    
-&lt;none&gt;             6 -47.943 107.89                         
-(1 | Volunteer)    5 -60.659 131.32 25.433  1  4.581e-07 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(plasma.lmer)[<span class="dv">2</span>,<span class="dv">6</span>]<span class="sc">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.290542e-07</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## We can also use the AIC/BIC to compare the models ##</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Models <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">plasma.null=</span>plasma.null, <span class="at">plasma.lmer=</span>plasma.lmer)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">AIC=</span><span class="fu">lapply</span>(Models, AIC), <span class="at">BIC=</span><span class="fu">lapply</span>(Models, BIC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>            AIC      BIC     
-plasma.null 134.8699 142.1986
-plasma.lmer 107.8852 116.6796</code></pre>
-</div>
-</div>
 </section>
 <section id="check-if-the-treatment-effect-is-significant." class="level3">
 <h3 class="anchored" data-anchor-id="check-if-the-treatment-effect-is-significant.">5. Check if the treatment effect is significant.</h3>
-<p>We compare nested models (with and without <code>Treatment</code> factor) using the LRT with the <code>anova()</code> function base on fitting through the ML method</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Clotting <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Volunteer), <span class="at">data=</span>Plasma, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M1,M2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Data: Plasma
-Models:
-M1: Clotting ~ 1 + (1 | Volunteer)
-M2: Clotting ~ -1 + Treatment + (1 | Volunteer)
-   npar    AIC    BIC  logLik deviance  Chisq Df Pr(&gt;Chisq)   
-M1    3 117.77 122.17 -55.885  111.770                        
-M2    6 107.80 116.60 -47.902   95.804 15.966  3   0.001152 **
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-</div>
-<p>We conclude that the <code>Treatment</code> effect is significant.</p>
+<!-- We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method -->
+<!-- We conclude that the `Treatment` effect is significant. -->
 </section>
 <section id="verify-whether-the-model-assumptions-are-satisfied." class="level3">
 <h3 class="anchored" data-anchor-id="verify-whether-the-model-assumptions-are-satisfied.">6. Verify whether the model assumptions are satisfied.</h3>
 <p><strong>a) Assessing assumptions on the within-group errors</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma.lmer, Volunteer <span class="sc">~</span> <span class="fu">resid</span>(., <span class="at">type=</span><span class="st">"pearson"</span>), <span class="at">abline=</span><span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">resid</span>(plasma.lmer, <span class="at">type=</span><span class="st">"pearson"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(res)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Shapiro-Wilk normality test
-
-data:  res
-W = 0.94578, p-value = 0.1093</code></pre>
-</div>
-</div>
-<ul>
-<li>We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy).</li>
-</ul>
+<!-- -   We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy). -->
 <p><strong>b) Assessing assumptions on the random-effects</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">ranef</span>(plasma.lmer)<span class="sc">$</span>Volunteer)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(u)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Shapiro-Wilk normality test
-
-data:  u
-W = 0.76565, p-value = 0.01215</code></pre>
-</div>
-</div>
-<ul>
-<li>Again, the are some issues with the assumptions for the random effects.</li>
-</ul>
+<!-- -   Again, the are some issues with the assumptions for the random effects. -->
 </section>
 <section id="examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-compute-the-predicted-random-effects-and-fitted-values." class="level3">
 <h3 class="anchored" data-anchor-id="examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-compute-the-predicted-random-effects-and-fitted-values.">7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.</h3>
 <p><strong>a) Estimated fixed effects and 95% confidence intervals</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Treatment1 Treatment2 Treatment3 Treatment4 
-    9.3000     9.7125     9.9375    11.0250 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>4 x 4 Matrix of class "dpoMatrix"
-           Treatment1 Treatment2 Treatment3 Treatment4
-Treatment1  0.4141183  0.3321317  0.3321317  0.3321317
-Treatment2  0.3321317  0.4141183  0.3321317  0.3321317
-Treatment3  0.3321317  0.3321317  0.4141183  0.3321317
-Treatment4  0.3321317  0.3321317  0.3321317  0.4141183</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>beta.CI <span class="ot">&lt;-</span> <span class="fu">confint</span>(plasma.lmer, <span class="at">parm=</span><span class="st">"beta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Computing profile confidence intervals ...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>beta.CI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>              2.5 %   97.5 %
-Treatment1 8.000009 10.59999
-Treatment2 8.412509 11.01249
-Treatment3 8.637509 11.23749
-Treatment4 9.725009 12.32499</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span>j, <span class="fu">fixef</span>(plasma.lmer), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">xaxt=</span><span class="st">"n"</span>,</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fl">0.5</span><span class="sc">+</span><span class="fu">c</span>(<span class="dv">0</span>,j), <span class="at">ylim=</span><span class="fu">range</span>(<span class="fu">c</span>(beta.CI))<span class="sc">*</span><span class="fu">c</span>(<span class="fl">0.9</span>,<span class="fl">1.1</span>),</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Type"</span>, <span class="at">ylab=</span><span class="st">"Estimated fixed effects"</span>)</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at=</span><span class="dv">1</span><span class="sc">:</span>j, <span class="at">labels=</span><span class="fu">rownames</span>(beta.CI))</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(<span class="dv">1</span><span class="sc">:</span>j, beta.CI[,<span class="st">"2.5 %"</span>], <span class="dv">1</span><span class="sc">:</span>j, beta.CI[,<span class="st">"97.5 %"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>We can use the <code>emmeans()</code> function to compute pairwise comparisons between treatments</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Welcome to emmeans.
-Caution: You lose important information if you filter this package's results.
-See '? untidy'</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(plasma.lmer, pairwise<span class="sc">~</span>Treatment, <span class="at">infer=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$emmeans
- Treatment emmean    SE   df lower.CL upper.CL t.ratio p.value
- 1           9.30 0.644 9.56     7.86     10.7  14.452  &lt;.0001
- 2           9.71 0.644 9.56     8.27     11.2  15.093  &lt;.0001
- 3           9.94 0.644 9.56     8.49     11.4  15.442  &lt;.0001
- 4          11.03 0.644 9.56     9.58     12.5  17.132  &lt;.0001
-
-Degrees-of-freedom method: kenward-roger 
-Confidence level used: 0.95 
-
-$contrasts
- contrast                estimate    SE df lower.CL upper.CL t.ratio p.value
- Treatment1 - Treatment2   -0.412 0.405 21    -1.54   0.7162  -1.019  0.7405
- Treatment1 - Treatment3   -0.637 0.405 21    -1.77   0.4912  -1.574  0.4139
- Treatment1 - Treatment4   -1.725 0.405 21    -2.85  -0.5963  -4.260  0.0018
- Treatment2 - Treatment3   -0.225 0.405 21    -1.35   0.9037  -0.556  0.9440
- Treatment2 - Treatment4   -1.312 0.405 21    -2.44  -0.1838  -3.241  0.0189
- Treatment3 - Treatment4   -1.087 0.405 21    -2.22   0.0412  -2.686  0.0616
-
-Degrees-of-freedom method: kenward-roger 
-Confidence level used: 0.95 
-Conf-level adjustment: tukey method for comparing a family of 4 estimates 
-P value adjustment: tukey method for comparing a family of 4 estimates </code></pre>
-</div>
-</div>
-<p>Two out of six pairwise comparisons are statistically significant at the 5% level:</p>
-<ul>
-<li>The mean clotting time for treatment 4 is significantly longer than that for treatments 1 and 2.</li>
-</ul>
+<!-- We can use the `emmeans()` function to *compute pairwise comparisons between treatments* -->
+<!-- Two out of six pairwise comparisons are statistically significant at the 5% level: -->
+<!-- -   The mean clotting time for treatment 4 is significantly longer than that for treatments 1 and 2. -->
 <p><strong>b) Estimated variance components and 95% confidence intervals</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VarCorr</span>(plasma.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Groups    Name        Std.Dev.
- Volunteer (Intercept) 1.63005 
- Residual              0.80987 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(plasma.lmer, <span class="at">parm=</span><span class="st">"theta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Computing profile confidence intervals ...</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>           2.5 %   97.5 %
-.sig01 0.9562558 2.794239
-.sigma 0.5849697 1.035247</code></pre>
-</div>
-</div>
-<p>Intra-class correlation coefficient: <span class="math inline">\(\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{1.63^2}{1.63^2+0.81^2}=0.802\)</span>. Which means that 80.1% of the overall variability can be attributed to the differences between the individuals.</p>
+<!-- Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{1.63^2}{1.63^2+0.81^2}=0.802$. Which means that 80.1% of the overall variability can be attributed to the differences between the individuals. -->
 <p><strong>c) Compute the predicted random effects and fitted values</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="fu">ranef</span>(plasma.lmer)<span class="sc">$</span>Volunteer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                      1        2           3        4         5          6
-(Intercept) -0.04120702 3.608557 -0.06475388 0.123621 -1.501113 -0.1824882
-                     7         8
-(Intercept) -0.5827849 -1.359832</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>plasma.fitted <span class="ot">&lt;-</span> <span class="fu">cbind</span>(Plasma,</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">Clotting.fit=</span><span class="fu">fitted</span>(plasma.lmer),</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">error=</span><span class="fu">resid</span>(plasma.lmer))</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(plasma.fitted, <span class="at">n=</span><span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Volunteer Treatment Clotting Clotting.fit       error
-1         1         1      8.4     9.258793 -0.85879298
-2         1         2      9.4     9.671293 -0.27129298
-3         1         3      9.8     9.896293 -0.09629298
-4         1         4     12.2    10.983793  1.21620702
-5         2         1     12.8    12.908557 -0.10855720
-6         2         2     15.2    13.321057  1.87894280
-7         2         3     12.9    13.546057 -0.64605720
-8         2         4     14.4    14.633557 -0.23355720</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plasma.fitted<span class="sc">$</span>Clotting, plasma.fitted<span class="sc">$</span>Clotting.fit,</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Observed"</span>, <span class="at">ylab=</span><span class="st">"Predicted"</span>, <span class="at">main=</span><span class="st">"Clotting time (mins)"</span>)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
 </section>
 </section>
 <section id="exercise-2-spider-data" class="level1">
@@ -620,9 +402,9 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 <section id="load-the-data-intored-in-the-spiders.txt-file-and-convert-plot-variable-to-factor.-make-descriptive-graphs-to-visualize-relationships-between-the-variable-of-interest-and-the-explanatory-variables-taking-into-account-the-plot-factor." class="level3">
 <h3 class="anchored" data-anchor-id="load-the-data-intored-in-the-spiders.txt-file-and-convert-plot-variable-to-factor.-make-descriptive-graphs-to-visualize-relationships-between-the-variable-of-interest-and-the-explanatory-variables-taking-into-account-the-plot-factor.">1. Load the data intored in the <code>Spiders.txt</code> file and convert <code>Plot</code> variable to factor. Make descriptive graphs to visualize relationships between the variable of interest and the explanatory variables, taking into account the <code>Plot</code> factor.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>Spiders <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"Spiders.txt"</span>, <span class="at">header=</span>T)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>Spiders<span class="sc">$</span>Plot <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(Spiders<span class="sc">$</span>Plot)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Spiders)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Spiders <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"Spiders.txt"</span>, <span class="at">header=</span>T)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Spiders<span class="sc">$</span>Plot <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(Spiders<span class="sc">$</span>Plot)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Spiders)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   168 obs. of  5 variables:
  $ DivIndex : num  1.05 1.13 1 0.87 0.94 1.01 1.2 0.38 0.71 0.82 ...
@@ -634,33 +416,33 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </div>
 <p>We can make descriptive graphs of the data using the ggplot2 package</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Spiders, <span class="fu">aes</span>(<span class="at">x=</span>HerbLayer, <span class="at">y=</span>DivIndex, <span class="at">color=</span>Plot)) <span class="sc">+</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Percentage of Herb Layer Cover"</span>, <span class="at">y=</span><span class="st">"Diversity Index"</span>) <span class="sc">+</span></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Spiders, <span class="fu">aes</span>(<span class="at">x=</span>HerbLayer, <span class="at">y=</span>DivIndex, <span class="at">color=</span>Plot)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Percentage of Herb Layer Cover"</span>, <span class="at">y=</span><span class="st">"Diversity Index"</span>) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Spiders, <span class="fu">aes</span>(<span class="at">x=</span>Litter, <span class="at">y=</span>DivIndex, <span class="at">color=</span>Plot)) <span class="sc">+</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Percentage of Litter Content"</span>, <span class="at">y=</span><span class="st">"Diversity Index"</span>) <span class="sc">+</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Spiders, <span class="fu">aes</span>(<span class="at">x=</span>Litter, <span class="at">y=</span>DivIndex, <span class="at">color=</span>Plot)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Percentage of Litter Content"</span>, <span class="at">y=</span><span class="st">"Diversity Index"</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Spiders, <span class="fu">aes</span>(<span class="at">x=</span>GroundVeg, <span class="at">y=</span>DivIndex, <span class="at">color=</span>Plot)) <span class="sc">+</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Percentage of Ground Vegetation"</span>, <span class="at">y=</span><span class="st">"Diversity Index"</span>) <span class="sc">+</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Spiders, <span class="fu">aes</span>(<span class="at">x=</span>GroundVeg, <span class="at">y=</span>DivIndex, <span class="at">color=</span>Plot)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Percentage of Ground Vegetation"</span>, <span class="at">y=</span><span class="st">"Diversity Index"</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Design graph to compare average diversity indexes for each level of the <code>Plot</code> factor</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(DivIndex <span class="sc">~</span> Plot, <span class="at">data=</span>Spiders)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(DivIndex <span class="sc">~</span> Plot, <span class="at">data=</span>Spiders)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -668,48 +450,16 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </section>
 <section id="test-if-random-effects-are-necessary" class="level3">
 <h3 class="anchored" data-anchor-id="test-if-random-effects-are-necessary">2. Test if random effects are necessary</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit the models ##</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>spiders.null <span class="ot">&lt;-</span> <span class="fu">lm</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> GroundVeg, <span class="at">data=</span>Spiders)</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>spiders.lmer <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> GroundVeg <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders)</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="do">## LRT for the variance component sigma2_u ##</span></span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>LRT <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>(<span class="fu">logLik</span>(spiders.null,<span class="at">REML=</span>T)<span class="sc">-</span><span class="fu">logLik</span>(spiders.lmer,<span class="at">REML=</span>T))</span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pchisq</span>(LRT,<span class="at">df=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.0002102636</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Using the ranova() function from lmerTest package ##</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(spiders.lmer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>ANOVA-like table for random-effects: Single term deletions
-
-Model:
-DivIndex ~ HerbLayer + Litter + GroundVeg + (1 | Plot)
-           npar logLik     AIC    LRT Df Pr(&gt;Chisq)    
-&lt;none&gt;        6 98.715 -185.43                         
-(1 | Plot)    5 92.495 -174.99 12.439  1  0.0004205 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ranova</span>(spiders.lmer)[<span class="dv">2</span>,<span class="dv">6</span>]<span class="sc">/</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.0002102636</code></pre>
-</div>
-</div>
 </section>
 <section id="check-which-environmental-variables-should-be-included-in-the-model." class="level3">
 <h3 class="anchored" data-anchor-id="check-which-environmental-variables-should-be-included-in-the-model.">3. Check which environmental variables should be included in the model.</h3>
 <p>We compare nested models:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>M0 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>M3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> GroundVeg <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M0,M1,M2,M3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>M0 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>M3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> GroundVeg <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M0,M1,M2,M3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data: Spiders
 Models:
@@ -726,144 +476,35 @@ M3    6 -204.26 -185.52 108.132  -216.26  0.3830  1  0.5360224
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>We conclude that the only the <code>HerbLayer</code> and <code>Litter</code> covariates are statistically significant.</p>
-<p>We can also check if a interaction between these two variables should be included in the model</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>M4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> HerbLayer<span class="sc">*</span>Litter <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders, <span class="at">REML=</span><span class="cn">FALSE</span>)</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M2,M4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Data: Spiders
-Models:
-M2: DivIndex ~ 1 + HerbLayer + Litter + (1 | Plot)
-M4: DivIndex ~ 1 + HerbLayer + Litter + HerbLayer * Litter + (1 | Plot)
-   npar     AIC     BIC logLik deviance  Chisq Df Pr(&gt;Chisq)
-M2    5 -205.88 -190.26 107.94  -215.88                     
-M4    6 -204.09 -185.34 108.05  -216.09 0.2089  1     0.6476</code></pre>
-</div>
-</div>
+<!-- We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant. -->
+<!-- We can also check if a interaction between these two variables should be included in the model -->
 </section>
 <section id="fit-the-final-linear-mixed-model-and-write-its-equation" class="level3">
 <h3 class="anchored" data-anchor-id="fit-the-final-linear-mixed-model-and-write-its-equation">4. Fit the final linear mixed model and write its equation</h3>
-<p>We fit the following linear mixed model <span class="math display">\[y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}\]</span> <span class="math display">\[u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)\]</span> where</p>
-<ul>
-<li><span class="math inline">\(y_{ij}\)</span> is the diversity index at site <span class="math inline">\(j\)</span> in plot <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(\beta_0\)</span> is a global intercept</li>
-<li><span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> are regression coefficients associated with the continuous covariates <code>HerbLayer</code> and <code>Litter</code>, respectively</li>
-<li><span class="math inline">\(u_i\)</span> is a random variable associated with the <span class="math inline">\(i\)</span>-th surveyed plot</li>
-<li><span class="math inline">\(\epsilon_{ij}\)</span> are independent random errors</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Final model ##</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>Model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(DivIndex <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> HerbLayer <span class="sc">+</span> Litter <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Plot), <span class="at">data=</span>Spiders)</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-lmerModLmerTest]
-Formula: DivIndex ~ 1 + HerbLayer + Litter + (1 | Plot)
-   Data: Spiders
-
-REML criterion at convergence: -201.3
-
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--3.6298 -0.4518  0.0329  0.5959  2.6373 
-
-Random effects:
- Groups   Name        Variance Std.Dev.
- Plot     (Intercept) 0.004145 0.06438 
- Residual             0.013854 0.11770 
-Number of obs: 168, groups:  Plot, 30
-
-Fixed effects:
-             Estimate Std. Error        df t value Pr(&gt;|t|)    
-(Intercept)   0.93674    0.01994  51.53734  46.985  &lt; 2e-16 ***
-HerbLayer     0.16628    0.04301 127.12493   3.866 0.000175 ***
-Litter       -0.22189    0.07077 157.44148  -3.135 0.002048 ** 
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Correlation of Fixed Effects:
-          (Intr) HrbLyr
-HerbLayer -0.609       
-Litter    -0.278  0.026</code></pre>
-</div>
-</div>
+<!-- We fit the following linear mixed model $$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where -->
+<!-- -   $y_{ij}$ is the diversity index at site $j$ in plot $i$ -->
+<!-- -   $\beta_0$ is a global intercept -->
+<!-- -   $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively -->
+<!-- -   $u_i$ is a random variable associated with the $i$-th surveyed plot -->
+<!-- -   $\epsilon_{ij}$ are independent random errors -->
 </section>
 <section id="verify-whether-the-model-assumptions-are-satisfied.-1" class="level3">
 <h3 class="anchored" data-anchor-id="verify-whether-the-model-assumptions-are-satisfied.-1">5. Verify whether the model assumptions are satisfied.</h3>
 <p><strong>a) Assessing assumptions on the within-group errors</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Model, Plot <span class="sc">~</span> <span class="fu">resid</span>(., <span class="at">type=</span><span class="st">"pearson"</span>), <span class="at">abline=</span><span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">resid</span>(Model, <span class="at">type=</span><span class="st">"pearson"</span>)</span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(res)</span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Shapiro-Wilk normality test
-
-data:  res
-W = 0.96873, p-value = 0.0007681</code></pre>
-</div>
-</div>
 <p><strong>b) Assessing assumptions on the random effects</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">ranef</span>(Model)<span class="sc">$</span>Plot)</span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(u)</span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(u)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-    Shapiro-Wilk normality test
-
-data:  u
-W = 0.96304, p-value = 0.3695</code></pre>
-</div>
-</div>
 </section>
 <section id="examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-make-a-plot-of-observed-vs-predicted-diversity-index-values." class="level3">
 <h3 class="anchored" data-anchor-id="examine-the-model-results-estimated-fixed-effects-and-variance-components.-compute-and-interpret-the-intra-class-correlation-coefficient.-make-a-plot-of-observed-vs-predicted-diversity-index-values.">6. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Make a plot of observed vs predicted diversity index values.</h3>
 <p><strong>a) Estimated fixed effects and 95% confidence intervals</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(Model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(Intercept)   HerbLayer      Litter 
-  0.9367414   0.1662767  -0.2218901 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>beta.CI <span class="ot">&lt;-</span> <span class="fu">confint</span>(Model, <span class="at">parm=</span><span class="st">"beta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Computing profile confidence intervals ...</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>beta.CI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                  2.5 %     97.5 %
-(Intercept)  0.89767549  0.9755674
-HerbLayer    0.08255604  0.2501822
-Litter      -0.36550678 -0.0822844</code></pre>
-</div>
-</div>
 <p><strong>b) Estimated variance components and 95% confidence intervals</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VarCorr</span>(Model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VarCorr</span>(Model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Groups   Name        Std.Dev.
  Plot     (Intercept) 0.064379
  Residual             0.117703</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(Model, <span class="at">parm=</span><span class="st">"theta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(Model, <span class="at">parm=</span><span class="st">"theta_"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Computing profile confidence intervals ...</code></pre>
 </div>
@@ -873,38 +514,16 @@ Litter      -0.36550678 -0.0822844</code></pre>
 .sigma 0.10450819 0.13254556</code></pre>
 </div>
 </div>
-<p>Intra-class correlation coefficient: <span class="math inline">\(\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.23\)</span>. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots.</p>
+<!-- Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.23$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots. -->
 <p><strong>c) Compare observed and predicted diversity index values</strong></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>spiders.fitted <span class="ot">&lt;-</span> <span class="fu">cbind</span>(Spiders,</span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">DivIndex.fit=</span><span class="fu">fitted</span>(Model),</span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">error=</span><span class="fu">resid</span>(Model))</span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(spiders.fitted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  DivIndex HerbLayer GroundVeg Litter Plot DivIndex.fit       error
-1     1.05      0.27      0.01      0    1    0.9863934  0.06360665
-2     1.13      0.45      0.01      0    1    1.0163232  0.11367684
-3     1.00      0.63      0.01      0    1    1.0462530 -0.04625298
-4     0.87      0.49      0.01      0    1    1.0229742 -0.15297423
-5     0.94      0.32      0.03      0    1    0.9947072 -0.05470719
-6     1.01      0.73      0.27      0    1    1.0628806 -0.05288065</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(spiders.fitted<span class="sc">$</span>DivIndex, spiders.fitted<span class="sc">$</span>DivIndex.fit,</span>
-<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Observed"</span>, <span class="at">ylab=</span><span class="st">"Predicted"</span>, <span class="at">main=</span><span class="st">"Diversity Index"</span>,</span>
-<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim=</span><span class="fu">c</span>(<span class="fl">0.4</span>,<span class="fl">1.5</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="fl">0.4</span>,<span class="fl">1.5</span>))</span>
-<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>),<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
 </section>
 </section>
 <section id="exercise-3-split-plot-experiment-on-varieties-of-oats" class="level1">
 <h1>Exercise 3: split-plot experiment on varieties of oats</h1>
 <p>These data have been introduced by <a href="https://www.jstor.org/stable/2983638">Yates (1935)</a> as an example of a split-plot design (<em>material extracted from Durban, 2014</em>). The experimental units were arranged into six block using a <span class="math inline">\(3 \times 4\)</span> full factorial design, with three varieties of oats and four nitrogen concentrations. The term <em>full factorial</em> means that every variety was used with every nitrogen concentration.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>Oats <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"Oats.txt"</span>, <span class="at">header=</span>T, <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Oats, <span class="at">n=</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Oats <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"Oats.txt"</span>, <span class="at">header=</span>T, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Oats, <span class="at">n=</span><span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Block     Variety nitro yield
 1      I     Victory   0.0   111
@@ -920,7 +539,7 @@ Litter      -0.36550678 -0.0822844</code></pre>
 11     I  Marvellous   0.4   118
 12     I  Marvellous   0.6   156</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Oats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Oats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   72 obs. of  4 variables:
  $ Block  : Factor w/ 6 levels "I","II","III",..: 1 1 1 1 1 1 1 1 1 1 ...
@@ -928,22 +547,22 @@ Litter      -0.36550678 -0.0822844</code></pre>
  $ nitro  : num  0 0.2 0.4 0.6 0 0.2 0.4 0.6 0 0.2 ...
  $ yield  : int  111 130 157 174 117 114 161 141 105 140 ...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Oats, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">factor</span>(nitro), <span class="at">y=</span>yield, <span class="at">color=</span>Variety)) <span class="sc">+</span></span>
-<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group=</span>Variety)) <span class="sc">+</span> </span>
-<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Nitrogen concentration"</span>, <span class="at">y=</span><span class="st">"Yield"</span>) <span class="sc">+</span></span>
-<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Yield of oats by variety and nitrogen level"</span>) <span class="sc">+</span></span>
-<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Block, <span class="at">ncol=</span><span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Oats, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">factor</span>(nitro), <span class="at">y=</span>yield, <span class="at">color=</span>Variety)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group=</span>Variety)) <span class="sc">+</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Nitrogen concentration"</span>, <span class="at">y=</span><span class="st">"Yield"</span>) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Yield of oats by variety and nitrogen level"</span>) <span class="sc">+</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Block, <span class="at">ncol=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Design graph to compare average yields for each level of <code>Block</code>, <code>Variety</code> and <code>nitro</code> factors</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(yield <span class="sc">~</span> Block<span class="sc">*</span>Variety<span class="sc">*</span><span class="fu">factor</span>(nitro), <span class="at">data=</span>Oats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.design</span>(yield <span class="sc">~</span> Block<span class="sc">*</span>Variety<span class="sc">*</span><span class="fu">factor</span>(nitro), <span class="at">data=</span>Oats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Chapter1_Exercises_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>

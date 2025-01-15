@@ -59,7 +59,7 @@ We observe systematic differences between subjects and treatments.
 -   The eight subjects represents a sample from the population about which we wish to make inferences (*random factor*), so we use random effects to model the `Volunteer` factor.
 
 ```{r, fig.cap="Average clotting time for each level of the factors `Treatment` and `Volunteer`"}
-plot.design(Clotting ~ Treatment*Volunteer, data=Plasma)
+plot.design(Clotting ~ Treatment + Volunteer, data=Plasma)
 ```
 
 -   We see that the variability associated with the `Treatment` factor is lower than the variability associated with the `Volunteer` factor.
@@ -68,21 +68,21 @@ plot.design(Clotting ~ Treatment*Volunteer, data=Plasma)
 
 ### 3. Write the linear mixed model equation.
 
-$$y_{ij} = \beta_j + u_i + \epsilon_{ij}, \quad i=1,\ldots,8, \quad j=1,\ldots,4,$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where
+<!-- $$y_{ij} = \beta_j + u_i + \epsilon_{ij}, \quad i=1,\ldots,8, \quad j=1,\ldots,4,$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where -->
 
--   $\beta_j$ is the mean clotting time from the $j$-th treatment
--   $u_i$ is a random variable associated with the $i$-th individual
--   $\epsilon_{ij}$ are independent random errors
+<!-- -   $\beta_j$ is the mean clotting time from the $j$-th treatment -->
+<!-- -   $u_i$ is a random variable associated with the $i$-th individual -->
+<!-- -   $\epsilon_{ij}$ are independent random errors -->
 
-Using matrix notation
+<!-- Using matrix notation -->
 
-$$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_4 \end{pmatrix} \begin{pmatrix} \beta_1 \\ \vdots \\ \beta_4 \end{pmatrix} +
-\begin{pmatrix}
-\boldsymbol{1}_4 & \boldsymbol{0} & \ldots & \boldsymbol{0} \\
-\boldsymbol{0} & \boldsymbol{1}_4 & \ldots & \boldsymbol{0} \\
-\vdots & \vdots & \ddots & \vdots \\
-\boldsymbol{0} & \boldsymbol{0} & \cdots & \boldsymbol{1}_4 \\
-\end{pmatrix} \boldsymbol{u} + \boldsymbol{\epsilon}$$
+<!-- $$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_4 \end{pmatrix} \begin{pmatrix} \beta_1 \\ \vdots \\ \beta_4 \end{pmatrix} + -->
+<!-- \begin{pmatrix} -->
+<!-- \boldsymbol{1}_4 & \boldsymbol{0} & \ldots & \boldsymbol{0} \\ -->
+<!-- \boldsymbol{0} & \boldsymbol{1}_4 & \ldots & \boldsymbol{0} \\ -->
+<!-- \vdots & \vdots & \ddots & \vdots \\ -->
+<!-- \boldsymbol{0} & \boldsymbol{0} & \cdots & \boldsymbol{1}_4 \\ -->
+<!-- \end{pmatrix} \boldsymbol{u} + \boldsymbol{\epsilon}$$ -->
 
 <!-- or using Kronecker products -->
 
@@ -90,7 +90,7 @@ $$\boldsymbol{y} = \begin{pmatrix} \boldsymbol{I}_4 \\ \vdots \\ \boldsymbol{I}_
 
 ### 4. Test if random effects are necessary.
 
-```{r, warning=FALSE, message=FALSE, include=TRUE}
+```{r, warning=FALSE, message=FALSE, include=FALSE}
 ## Fit the models ##
 library(lme4)
 
@@ -101,11 +101,6 @@ plasma.lmer <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma)
 LRT <- -2*(logLik(plasma.null,REML=T)-logLik(plasma.lmer,REML=T))
 mean(1-pchisq(LRT,df=c(0,1)))
 
-## Using the ranova() function from lmerTest package ##
-library(lmerTest)
-ranova(plasma.lmer)
-ranova(plasma.lmer)[2,6]/2
-
 ## We can also use the AIC/BIC to compare the models ##
 Models <- list(plasma.null=plasma.null, plasma.lmer=plasma.lmer)
 cbind(AIC=lapply(Models, AIC), BIC=lapply(Models, BIC))
@@ -113,21 +108,21 @@ cbind(AIC=lapply(Models, AIC), BIC=lapply(Models, BIC))
 
 ### 5. Check if the treatment effect is significant.
 
-We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method
+<!-- We compare nested models (with and without `Treatment` factor) using the LRT with the `anova()` function base on fitting through the ML method -->
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 M1 <- lmer(Clotting ~ 1 + (1|Volunteer), data=Plasma, REML=FALSE)
 M2 <- lmer(Clotting ~ -1 + Treatment + (1|Volunteer), data=Plasma, REML=FALSE)
 anova(M1,M2)
 ```
 
-We conclude that the `Treatment` effect is significant.
+<!-- We conclude that the `Treatment` effect is significant. -->
 
 ### 6. Verify whether the model assumptions are satisfied.
 
 **a) Assessing assumptions on the within-group errors**
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 plot(plasma.lmer)
 plot(plasma.lmer, Volunteer ~ resid(., type="pearson"), abline=0, lty=2)
 
@@ -138,11 +133,11 @@ qqline(res)
 shapiro.test(res)
 ```
 
--   We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy).
+<!-- -   We observe that the residuals are centred at zero and normally distributed, but there seems to be a lack of constant variance in the residuals (heterocedasticy). -->
 
 **b) Assessing assumptions on the random-effects**
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 u <- unlist(ranef(plasma.lmer)$Volunteer)
 qqnorm(u)
 qqline(u)
@@ -150,50 +145,50 @@ qqline(u)
 shapiro.test(u)
 ```
 
--   Again, the are some issues with the assumptions for the random effects.
+<!-- -   Again, the are some issues with the assumptions for the random effects. -->
 
 ### 7. Examine the model results (estimated fixed effects and variance components). Compute and interpret the intra-class correlation coefficient. Compute the predicted random effects and fitted values.
 
 **a) Estimated fixed effects and 95% confidence intervals**
 
-```{r}
+```{r, message=FALSE, include=FALSE}
 fixef(plasma.lmer)
 vcov(plasma.lmer)
 
 beta.CI <- confint(plasma.lmer, parm="beta_")
 beta.CI
 
-j <- 4
+i <- length(unique(Plasma$Volunteer))
+j <- length(unique(Plasma$Treatment))
+
 plot(1:j, fixef(plasma.lmer), pch=19, cex=0.5, xaxt="n",
      xlim=0.5+c(0,j), ylim=range(c(beta.CI))*c(0.9,1.1),
      xlab="Type", ylab="Estimated fixed effects")
 axis(1, at=1:j, labels=rownames(beta.CI))
 segments(1:j, beta.CI[,"2.5 %"], 1:j, beta.CI[,"97.5 %"])
 ```
+<!-- We can use the `emmeans()` function to *compute pairwise comparisons between treatments* -->
 
-We can use the `emmeans()` function to compute pairwise comparisons between treatments
-
-```{r}
+```{r, message=FALSE, include=FALSE}
 library(emmeans)
-emmeans(plasma.lmer, pairwise~Treatment, infer=T)
+emmeans(plasma.lmer, pairwise~Treatment, infer=T)$contrasts
 ```
+<!-- Two out of six pairwise comparisons are statistically significant at the 5% level: -->
 
-Two out of six pairwise comparisons are statistically significant at the 5% level:
-
--   The mean clotting time for treatment 4 is significantly longer than that for treatments 1 and 2.
+<!-- -   The mean clotting time for treatment 4 is significantly longer than that for treatments 1 and 2. -->
 
 **b) Estimated variance components and 95% confidence intervals**
 
-```{r}
+```{r, include=FALSE}
 VarCorr(plasma.lmer)
 confint(plasma.lmer, parm="theta_")
 ```
 
-Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{1.63^2}{1.63^2+0.81^2}=0.802$. Which means that 80.1% of the overall variability can be attributed to the differences between the individuals.
+<!-- Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{1.63^2}{1.63^2+0.81^2}=0.802$. Which means that 80.1% of the overall variability can be attributed to the differences between the individuals. -->
 
 **c) Compute the predicted random effects and fitted values**
 
-```{r}
+```{r, include=FALSE}
 t(ranef(plasma.lmer)$Volunteer)
 
 plasma.fitted <- cbind(Plasma,
@@ -255,7 +250,7 @@ plot.design(DivIndex ~ Plot, data=Spiders)
 
 ### 2. Test if random effects are necessary
 
-```{r, message=FALSE, include=TRUE}
+```{r, message=FALSE, include=FALSE}
 ## Fit the models ##
 library(lme4)
 
@@ -265,11 +260,6 @@ spiders.lmer <- lmer(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg + (1|Plot), d
 ## LRT for the variance component sigma2_u ##
 LRT <- -2*(logLik(spiders.null,REML=T)-logLik(spiders.lmer,REML=T))
 mean(1-pchisq(LRT,df=c(0,1)))
-
-## Using the ranova() function from lmerTest package ##
-library(lmerTest)
-ranova(spiders.lmer)
-ranova(spiders.lmer)[2,6]/2
 ```
 
 ### 3. Check which environmental variables should be included in the model.
@@ -284,27 +274,25 @@ M3 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + GroundVeg + (1|Plot), data=Spider
 anova(M0,M1,M2,M3)
 ```
 
-We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant.
+<!-- We conclude that the only the `HerbLayer` and `Litter` covariates are statistically significant. -->
 
-We can also check if a interaction between these two variables should be included in the model
-
-```{r, include=TRUE}
+<!-- We can also check if a interaction between these two variables should be included in the model -->
+```{r, include=FALSE}
 M4 <- lmer(DivIndex ~ 1 + HerbLayer + Litter + HerbLayer*Litter + (1|Plot), data=Spiders, REML=FALSE)
 anova(M2,M4)
 ```
 
 ### 4. Fit the final linear mixed model and write its equation
 
-We fit the following linear mixed model $$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where
+<!-- We fit the following linear mixed model $$y_{ij} = \beta_0 + \beta_1 \times HerbLayer_{ij} + \beta_2 \times Litter_{ij} + u_i + \epsilon_{ij}$$ $$u_i \sim N(0,\sigma^2_u), \quad \epsilon_{ij} \sim N(0,\sigma^2)$$ where -->
 
--   $y_{ij}$ is the diversity index at site $j$ in plot $i$
--   $\beta_0$ is a global intercept
--   $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively
--   $u_i$ is a random variable associated with the $i$-th surveyed plot
--   $\epsilon_{ij}$ are independent random errors
+<!-- -   $y_{ij}$ is the diversity index at site $j$ in plot $i$ -->
+<!-- -   $\beta_0$ is a global intercept -->
+<!-- -   $\beta_1$ and $\beta_2$ are regression coefficients associated with the continuous covariates `HerbLayer` and `Litter`, respectively -->
+<!-- -   $u_i$ is a random variable associated with the $i$-th surveyed plot -->
+<!-- -   $\epsilon_{ij}$ are independent random errors -->
 
-```{r, include=TRUE}
-## Final model ##
+```{r, include=FALSE}
 Model <- lmer(DivIndex ~ 1 + HerbLayer + Litter + (1|Plot), data=Spiders)
 summary(Model)
 ```
@@ -313,7 +301,7 @@ summary(Model)
 
 **a) Assessing assumptions on the within-group errors**
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 plot(Model)
 plot(Model, Plot ~ resid(., type="pearson"), abline=0, lty=2)
 
@@ -326,7 +314,7 @@ shapiro.test(res)
 
 **b) Assessing assumptions on the random effects**
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 u <- unlist(ranef(Model)$Plot)
 qqnorm(u)
 qqline(u)
@@ -338,7 +326,7 @@ shapiro.test(u)
 
 **a) Estimated fixed effects and 95% confidence intervals**
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 fixef(Model)
 
 beta.CI <- confint(Model, parm="beta_")
@@ -351,12 +339,11 @@ beta.CI
 VarCorr(Model)
 confint(Model, parm="theta_")
 ```
-
-Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.23$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots.
+<!-- Intra-class correlation coefficient: $\rho=\frac{\sigma^2_u}{\sigma^2_u+\sigma^2} = \frac{0.0644^2}{0.0644^2+0.1177^2}=0.23$. Which means that only 23% of the overall variability can be attributed to the differences between the surveyed plots. -->
 
 **c) Compare observed and predicted diversity index values**
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 spiders.fitted <- cbind(Spiders,
                         DivIndex.fit=fitted(Model),
                         error=resid(Model))
