@@ -104,14 +104,14 @@ anova(M1a,M1b)
 
 ### 6. Using the model with fixed and random effects, which is the probability of a positive response on the active drug group? Interpret the odds ratio $e^{\beta_1}$ and compute a 95% confidence interval.
 
-```{r, include=TRUE}
+```{r, include=TRUE, warning=FALSE}
 library(emmeans)
 emmeans(M1b, revpairwise~treat, type="response", inf=TRUE)
 ```
 
 -   For $u_i=0$, the probability of a positive response over a population of centres under the active drug group ($x_{ij}=1$) is $\hat{\pi}_{ij}=0.376$ with a 95% confidence interval of $[0.220, 0.564]$.
 
--   The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$.
+-   The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of $[0.77, 1.51]$. Since this CI contains 1, it is plausible that there are no differences in the odds between the drug and the control groups.
 
 ### 7. Using the best model, verify whether the model assumptions on the random effects are satisfied.
 
@@ -136,7 +136,7 @@ confint(Model, parm="theta_")
 
 We can compute the intra-class correlation coefficient as $$\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,$$ which means that 29% of the overall variability can be attributed to the differences between centres.
 
-### 9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).
+### 9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of Section 1.
 
 ```{r, fig.cap="Observed (dots) and predicted (asterisks) probabilities of a positive response for each centre"}
 multicentre$pred <- predict(Model, newdata=multicentre, type="response")

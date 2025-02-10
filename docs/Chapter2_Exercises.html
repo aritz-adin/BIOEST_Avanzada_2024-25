@@ -126,6 +126,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./Chapter1_Exercises.html" rel="" target="">
  <span class="menu-text">Chapter 1 - LMM</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./Chapter2_Exercises.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Chapter 2 - GLMM</span></a>
+  </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
 </div>
@@ -152,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval." id="toc-using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval." class="nav-link" data-scroll-target="#using-the-model-with-fixed-and-random-effects-which-is-the-probability-of-a-positive-response-on-the-active-drug-group-interpret-the-odds-ratio-ebeta_1-and-compute-a-95-confidence-interval.">6. Using the model with fixed and random effects, which is the probability of a positive response on the active drug group? Interpret the odds ratio <span class="math inline">\(e^{\beta_1}\)</span> and compute a 95% confidence interval.</a></li>
   <li><a href="#using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." id="toc-using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." class="nav-link" data-scroll-target="#using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied.">7. Using the best model, verify whether the model assumptions on the random effects are satisfied.</a></li>
   <li><a href="#which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." id="toc-which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient." class="nav-link" data-scroll-target="#which-is-the-estimated-variance-and-95-confidence-interval-of-the-within-centre-random-effect-compute-and-interpret-the-intra-class-correlation-coefficient.">8. Which is the estimated variance and 95% confidence interval of the within-centre random effect? Compute and interpret the intra-class correlation coefficient.</a></li>
-  <li><a href="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." id="toc-compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." class="nav-link" data-scroll-target="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).</a></li>
+  <li><a href="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." id="toc-compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." class="nav-link" data-scroll-target="#compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of Section 1.</a></li>
   </ul></li>
   <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a>
   <ul class="collapse">
@@ -403,7 +407,7 @@ Tests are performed on the log odds ratio scale </code></pre>
 </div>
 <ul>
 <li><p>For <span class="math inline">\(u_i=0\)</span>, the probability of a positive response over a population of centres under the active drug group (<span class="math inline">\(x_{ij}=1\)</span>) is <span class="math inline">\(\hat{\pi}_{ij}=0.376\)</span> with a 95% confidence interval of <span class="math inline">\([0.220, 0.564]\)</span>.</p></li>
-<li><p>The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of <span class="math inline">\([0.77, 1.51]\)</span>.</p></li>
+<li><p>The estimated odds of a patient showing a positive response on the active drug group relative to the control group is 1.08 with a 95% confidence interval of <span class="math inline">\([0.77, 1.51]\)</span>. Since this CI contains 1, it is plausible that there are no differences in the odds between the drug and the control groups.</p></li>
 </ul>
 </section>
 <section id="using-the-best-model-verify-whether-the-model-assumptions-on-the-random-effects-are-satisfied." class="level3">
@@ -448,7 +452,7 @@ W = 0.93053, p-value = 0.4162</code></pre>
 <p>We can compute the intra-class correlation coefficient as <span class="math display">\[\rho=\frac{\sigma^2_u}{\sigma^2_u+3.29}=1.169^2/(1.169^2+3.29) = 0.29347,\]</span> which means that 29% of the overall variability can be attributed to the differences between centres.</p>
 </section>
 <section id="compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1." class="level3">
-<h3 class="anchored" data-anchor-id="compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of section 1).</h3>
+<h3 class="anchored" data-anchor-id="compute-the-predicted-probabilties-of-a-positive-response-for-each-value-of-the-dataset.-include-those-estimated-probabilities-in-the-descriptive-plot-of-section-1.">9. Compute the predicted probabilties of a positive response for each value of the dataset. Include those estimated probabilities in the descriptive plot of Section 1.</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>multicentre<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(Model, <span class="at">newdata=</span>multicentre, <span class="at">type=</span><span class="st">"response"</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(multicentre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
